@@ -518,11 +518,7 @@ class _HomeState extends State<Home> {
                                   ),
                                   //menu other
                                   GestureDetector(
-                                    onTap: () {
-                                      showBottomSheet(
-                                          context: context,
-                                          builder: (context) => sliding_menu());
-                                    },
+                                    onTap: () {},
                                     child: Column(
                                       children: [
                                         Image.asset('Asset/other_icon.png'),

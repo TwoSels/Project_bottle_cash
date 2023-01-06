@@ -47,6 +47,9 @@ dependencies:
   flutter_profile_picture: ^2.0.0
   sliding_up_panel: ^2.0.0+1
   modal_bottom_sheet: ^2.1.2
+  url_launcher: ^5.2.7
+  flutter_form_builder: ^7.7.0
+  radio_button_form_field: ^0.0.4
 
 flutter_icons:
   image_path: "Asset/ICON.png"
