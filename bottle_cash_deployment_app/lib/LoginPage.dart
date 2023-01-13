@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:bottle_cash_deployment_app/Home.dart';
 import 'package:bottle_cash_deployment_app/Navbar/Persistent_navbar.dart';
+import 'package:bottle_cash_deployment_app/Service_auth/auth_service.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +9,9 @@ import 'package:passwordfield/passwordfield.dart';
 import 'RegisPage.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -32,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     _passwordVisible = false;
     super.initState();
+
     createBox();
     getdata();
   }
@@ -101,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Image.asset("Asset/Logo ABN.png"),
               ),
               Container(
-                height: 309,
+                height: 370,
                 width: 390,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -110,11 +115,12 @@ class _LoginPageState extends State<LoginPage> {
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20)),
                 ),
+                //isi widget buat form dan button
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      height: 290,
+                      height: 340,
                       width: 300,
                       child: Column(
                         children: [
@@ -299,6 +305,32 @@ class _LoginPageState extends State<LoginPage> {
                           //           fontWeight: FontWeight.bold,
                           //           color: Colors.white,
                           //         )),
+                          //   ),
+                          // ),
+
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     AuthService().signInwithGoogle();
+
+                          //     if (GoogleSignInAccount == null) {
+                          //       return;
+                          //     }
+                          //   },
+                          //   child: Container(
+                          //     height: 48,
+                          //     width: 200,
+                          //     child: Row(
+                          //       children: [
+                          //         Image(image: AssetImage("Asset/gugel.png")),
+                          //         RichText(
+                          //             text: TextSpan(
+                          //                 text: 'Login dengan Google',
+                          //                 style: GoogleFonts.roboto(
+                          //                     fontSize: 12,
+                          //                     fontWeight: FontWeight.w600,
+                          //                     color: Colors.black)))
+                          //       ],
+                          //     ),
                           //   ),
                           // ),
                           SizedBox(

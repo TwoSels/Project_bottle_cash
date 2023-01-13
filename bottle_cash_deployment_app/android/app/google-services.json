@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "723788646343",
+    "firebase_url": "https://bottlecash-4577a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "bottlecash-4577a",
+    "storage_bucket": "bottlecash-4577a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723788646343:android:cc94baad63016b8d6fbbe2",
+        "android_client_info": {
+          "package_name": "com.project.bottlecashapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723788646343-mitur8sphdj3vq8vd94ndq3qs45cehm2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3kq8M5JtCOQtrtYGNSqsHhaI__FP6GTE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723788646343-mitur8sphdj3vq8vd94ndq3qs45cehm2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

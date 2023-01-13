@@ -17,13 +17,7 @@ class Persistent_navbar extends StatelessWidget {
 
     _controller = PersistentTabController(initialIndex: 0);
     List<Widget> _buildScreens() {
-      return [
-        Home(),
-        AchievmentPage(),
-        scanqr_code(),
-        halaman_bantuan(),
-        LocationPage()
-      ];
+      return [Home(), AchievmentPage(), halaman_bantuan(), LocationPage()];
     }
 
     List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -37,15 +31,6 @@ class Persistent_navbar extends StatelessWidget {
         PersistentBottomNavBarItem(
           icon: Icon(CupertinoIcons.rosette),
           title: ("Achievement"),
-          activeColorPrimary: CupertinoColors.activeGreen,
-          inactiveColorPrimary: CupertinoColors.systemGrey,
-        ),
-        PersistentBottomNavBarItem(
-          icon: Icon(
-            CupertinoIcons.qrcode_viewfinder,
-            color: Colors.white,
-          ),
-          title: ("Scan QR"),
           activeColorPrimary: CupertinoColors.activeGreen,
           inactiveColorPrimary: CupertinoColors.systemGrey,
         ),
@@ -96,7 +81,7 @@ class Persistent_navbar extends StatelessWidget {
         duration: Duration(milliseconds: 200),
       ),
       navBarStyle:
-          NavBarStyle.style15, // Choose the nav bar style with this property.
+          NavBarStyle.style9, // Choose the nav bar style with this property.
     );
   }
 }

@@ -77,25 +77,25 @@ class _RegisPageState extends State<RegisPage> {
                               height: 55,
                             ),
                             //daftar dengan google
-                            GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                height: 50,
-                                width: 200,
-                                child: Row(
-                                  children: [
-                                    Image(image: AssetImage("Asset/gugel.png")),
-                                    RichText(
-                                        text: TextSpan(
-                                            text: 'Daftar dengan Google',
-                                            style: GoogleFonts.roboto(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.black)))
-                                  ],
-                                ),
-                              ),
-                            ),
+                            // GestureDetector(
+                            //   onTap: () {},
+                            //   child: Container(
+                            //     height: 50,
+                            //     width: 200,
+                            //     child: Row(
+                            //       children: [
+                            //         Image(image: AssetImage("Asset/gugel.png")),
+                            //         RichText(
+                            //             text: TextSpan(
+                            //                 text: 'Daftar dengan Google',
+                            //                 style: GoogleFonts.roboto(
+                            //                     fontSize: 12,
+                            //                     fontWeight: FontWeight.w600,
+                            //                     color: Colors.black)))
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(
                               height: 20,
                             ),

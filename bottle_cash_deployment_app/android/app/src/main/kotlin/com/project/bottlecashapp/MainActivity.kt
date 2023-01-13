@@ -1,4 +1,4 @@
-package com.example.bottle_cash_deployment_app
+package com.project.bottlecashapp
 
 import io.flutter.embedding.android.FlutterActivity
 

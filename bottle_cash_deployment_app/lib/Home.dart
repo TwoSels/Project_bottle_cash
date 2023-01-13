@@ -1,6 +1,7 @@
 import 'package:bottle_cash_deployment_app/Achievement.dart';
 import 'package:bottle_cash_deployment_app/LoginPage.dart';
 import 'package:bottle_cash_deployment_app/Navbar/slidingup_panel.dart';
+import 'package:bottle_cash_deployment_app/Service_auth/auth_service.dart';
 import 'package:bottle_cash_deployment_app/SpeedOnDemand.dart';
 import 'package:bottle_cash_deployment_app/TagihanIndihome.dart';
 import 'package:bottle_cash_deployment_app/Wifi_id.dart';
@@ -11,6 +12,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:bottle_cash_deployment_app/Card_component/card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -20,6 +23,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +66,10 @@ class _HomeState extends State<Home> {
                     fontsize: 21,
                     random: true,
                   ),
+                  // CircleAvatar(
+                  //   backgroundImage: NetworkImage(user!.photoURL!),
+                  //   radius: 30,
+                  // ),
                 ]),
           ),
           Builder(
@@ -82,7 +91,7 @@ class _HomeState extends State<Home> {
           children: [
             DrawerHeader(
               child: (Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   //tambah gambar dari user
                   ProfilePicture(
@@ -91,41 +100,61 @@ class _HomeState extends State<Home> {
                     fontsize: 21,
                     random: true,
                   ),
+                  // CircleAvatar(
+                  //   backgroundImage: NetworkImage(user!.photoURL!),
+                  //   radius: 30,
+                  // ),
                   Container(
-                    height: 70,
-                    width: 160,
-                    // decoration:
-                    //     BoxDecoration(border: Border.all(color: Colors.black)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //get nama user dari database
-                        RichText(
-                            text: TextSpan(
-                                text: '% nama user %',
-                                style: GoogleFonts.roboto(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold))),
-                        //get nama user dari database
-                        RichText(
-                            text: TextSpan(
-                                text: '% email user %',
-                                style: GoogleFonts.roboto(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400))),
-                        RichText(
-                            text: TextSpan(
-                                text: '% nomor user %',
-                                style: GoogleFonts.roboto(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400))),
-                      ],
-                    ),
-                  ),
+                      height: 70,
+                      width: 160,
+                      // decoration:
+                      //     BoxDecoration(border: Border.all(color: Colors.black)),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            //get nama user dari database
+                            RichText(
+                                text: TextSpan(
+                                    text: '% nama user %',
+                                    style: GoogleFonts.roboto(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold))),
+                            // Text(
+                            //   FirebaseAuth.instance.currentUser!.displayName!,
+                            //   style: TextStyle(
+                            //       fontSize: 16, fontWeight: FontWeight.bold),
+                            // ),
+                            //get email user dari database
+                            RichText(
+                                text: TextSpan(
+                                    text: '% email user %',
+                                    style: GoogleFonts.roboto(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400))),
+                            // Text(
+                            //   FirebaseAuth.instance.currentUser!.email!,
+                            //   style: TextStyle(
+                            //       fontSize: 12, fontWeight: FontWeight.w400),
+                            // ),
+                            //get nomor hp user dari database
+                            RichText(
+                                text: TextSpan(
+                                    text: '% nomor user %',
+                                    style: GoogleFonts.roboto(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400))),
+                          ],
+                        ),
+                      )),
                 ],
               )),
             ),
@@ -176,12 +205,9 @@ class _HomeState extends State<Home> {
                           fontSize: 14,
                           fontWeight: FontWeight.w700))),
               onTap: () {
-                PersistentNavBarNavigator.pushNewScreen(
-                  context,
-                  screen: LoginPage(),
-                  withNavBar: false,
-                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                );
+                // AuthService().signOutFromGoogle();
+                PersistentNavBarNavigator.pushNewScreen(context,
+                    screen: LoginPage(), withNavBar: false);
               },
             ),
             ListTile(

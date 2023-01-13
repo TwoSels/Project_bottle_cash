@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:change_app_package_name/change_app_package_name.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   await Hive.initFlutter();
+  Firebase.initializeApp();
   runApp(const MyApp());
 }
 
