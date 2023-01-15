@@ -17,8 +17,16 @@ class _halaman_bantuanState extends State<halaman_bantuan> {
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [Text("Ini halaman bantuan")],
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset('Asset/Aset Page 1.png'),
+            Text(
+              "Halaman Bantuan Sedang Dalam Pengembangan",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            Text("Ditunggu Untuk Updatenya",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
+          ],
         ),
       ),
     );

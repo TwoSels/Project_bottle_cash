@@ -19,8 +19,10 @@ class _RegisPageState extends State<RegisPage> {
   bool showErrorMessage = false;
 
   //bool ?_passwordVisible;
+  final TextEditingController _nameController = new TextEditingController();
   final TextEditingController _emailController = new TextEditingController();
-  //final TextEditingController _passController = new TextEditingController();
+  final TextEditingController _passController = new TextEditingController();
+  final TextEditingController _phoneController = new TextEditingController();
   //late bool _passwordVisible;
   static final RegExp nameRegExp = RegExp('[a-zA-Z]');
   static final RegExp numberRegExp = RegExp(r'[a-zA-Z]');
@@ -109,6 +111,7 @@ class _RegisPageState extends State<RegisPage> {
                                     //form nama
                                     TextFormField(
                                       obscureText: false,
+                                      controller: _nameController,
                                       decoration: InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -161,7 +164,7 @@ class _RegisPageState extends State<RegisPage> {
                                     //form password
                                     TextFormField(
                                       obscureText: true,
-                                      //controller: _passController,
+                                      controller: _passController,
                                       decoration: InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -213,6 +216,7 @@ class _RegisPageState extends State<RegisPage> {
                                     // form no.hp
                                     TextFormField(
                                       obscureText: false,
+                                      controller: _phoneController,
                                       decoration: InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(

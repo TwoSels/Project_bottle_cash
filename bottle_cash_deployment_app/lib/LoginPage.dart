@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Image.asset("Asset/Logo ABN.png"),
               ),
               Container(
-                height: 370,
+                height: 340,
                 width: 390,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -120,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      height: 340,
+                      height: 300,
                       width: 300,
                       child: Column(
                         children: [
