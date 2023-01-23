@@ -1,4 +1,4 @@
-package com.example.admin_bottle_cash_app
+package com.aplikasi.admin
 
 import io.flutter.embedding.android.FlutterActivity
 

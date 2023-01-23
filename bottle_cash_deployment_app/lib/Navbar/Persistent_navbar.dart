@@ -1,8 +1,8 @@
-import 'package:bottle_cash_deployment_app/Achievement.dart';
-import 'package:bottle_cash_deployment_app/Home.dart';
-import 'package:bottle_cash_deployment_app/Location.dart';
-import 'package:bottle_cash_deployment_app/bantuan.dart';
-import 'package:bottle_cash_deployment_app/scanqr_page.dart';
+import 'package:bottle_cash_deployment_app/Screen/Achievement.dart';
+import 'package:bottle_cash_deployment_app/Screen/Home.dart';
+import 'package:bottle_cash_deployment_app/Screen/Location.dart';
+import 'package:bottle_cash_deployment_app/Screen/bantuan.dart';
+import 'package:bottle_cash_deployment_app/Screen/scanqr_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';

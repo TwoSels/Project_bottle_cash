@@ -1,26 +1,28 @@
-import 'package:bottle_cash_deployment_app/Home.dart';
-import 'package:bottle_cash_deployment_app/LoginPage.dart';
+import 'package:bottle_cash_deployment_app/Screen/Home.dart';
+import 'package:bottle_cash_deployment_app/Screen/LoginPage.dart';
 import 'package:bottle_cash_deployment_app/Navbar/Persistent_navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseAuth authService = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
+final User? user = authService.currentUser;
 
 class AuthService {
+  final auth = FirebaseAuth.instance;
   //hanldestate
-  // handleAuthState() {
-  //   return StreamBuilder(
-  //       stream: FirebaseAuth.instance.authStateChanges(),
-  //       builder: (BuildContext context, snapshot) {
-  //         if (snapshot.hasData) {
-  //           return Home();
-  //         } else {
-  //           return LoginPage();
-  //         }
-  //       });
-  // }
+  handleAuthState() {
+    return StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.hasData) {
+            return Persistent_navbar();
+          } else {
+            return LoginPage();
+          }
+        });
+  }
 
   Future<String?> signInwithGoogle() async {
     try {
@@ -32,7 +34,7 @@ class AuthService {
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
-      await _auth.signInWithCredential(credential);
+      await authService.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       print(e.message);
       throw e;
@@ -41,6 +43,6 @@ class AuthService {
 
   Future<void> signOutFromGoogle() async {
     await _googleSignIn.signOut();
-    await _auth.signOut();
+    await authService.signOut();
   }
 }

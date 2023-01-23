@@ -1,3 +1,5 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 
 class reset_gembok extends StatefulWidget {
@@ -8,6 +10,8 @@ class reset_gembok extends StatefulWidget {
 }
 
 class _reset_gembokState extends State<reset_gembok> {
+  DatabaseReference reference = FirebaseDatabase.instance.ref().child('kode');
+  final TextEditingController update = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,24 +23,31 @@ class _reset_gembokState extends State<reset_gembok> {
         child: Align(
             alignment: Alignment.center,
             child: Container(
-              height: 390,
+              height: 400,
               width: 330,
               // decoration:
               //     BoxDecoration(border: Border.all(color: Colors.black)),
               child: Column(
                 children: [
                   Container(
-                    height: 240,
+                    height: 180,
                     width: 280,
                     child: Image.asset("asset/Aset Page 1.png"),
                   ),
-                  TextField(
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        label: Text("Reset Kode Gembok"),
-                        hintText: 'Masukkan kode baru'),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: 50,
+                    width: 300,
+                    child: TextField(
+                      controller: update,
+                      decoration: InputDecoration(
+                          hintText: 'Masukkan kode baru',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.black))),
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -45,7 +56,13 @@ class _reset_gembokState extends State<reset_gembok> {
                     height: 40,
                     width: 120,
                     child: ElevatedButton(
-                        onPressed: () {}, child: Text('Update Kode')),
+                        onPressed: () {
+                          reference
+                              .set({'gembok': update.text.toString().trim()});
+                          Fluttertoast.showToast(msg: "kode berhasil diupdate");
+                          Navigator.pop(context);
+                        },
+                        child: Text('Update Kode')),
                   )
                 ],
               ),

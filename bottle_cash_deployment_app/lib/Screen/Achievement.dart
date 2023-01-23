@@ -91,6 +91,7 @@ class _AchievmentPageState extends State<AchievmentPage> {
 
                         if (image == null) return toast();
                         await saveImage(image);
+                        toast();
                       },
                       label: const Text(
                         'Bagikan',

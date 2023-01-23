@@ -1,9 +1,16 @@
 import 'dart:ffi';
+import 'dart:math';
 import 'package:checkbox_formfield/checkbox_formfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'LoginPage.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:bottle_cash_deployment_app/Service_auth/auth_service.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class RegisPage extends StatefulWidget {
   RegisPage({Key? key}) : super(key: key);
@@ -17,20 +24,37 @@ class _RegisPageState extends State<RegisPage> {
   final _formKey = GlobalKey<FormState>();
   bool? checkboxIconFormFieldValue = false;
   bool showErrorMessage = false;
+  FirebaseDatabase database = FirebaseDatabase.instance;
+  late DatabaseReference dbref =
+      FirebaseDatabase.instance.ref('pelanggan/bottlecash');
 
   //bool ?_passwordVisible;
   final TextEditingController _nameController = new TextEditingController();
   final TextEditingController _emailController = new TextEditingController();
   final TextEditingController _passController = new TextEditingController();
   final TextEditingController _phoneController = new TextEditingController();
+  void id() {
+    int nomor = 0;
+    nomor = nomor + 1;
+  }
+
   //late bool _passwordVisible;
   static final RegExp nameRegExp = RegExp('[a-zA-Z]');
   static final RegExp numberRegExp = RegExp(r'[a-zA-Z]');
   final String spasi = " ";
 
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passController.dispose();
+    _passController.dispose();
+    super.dispose();
+  }
+
   @override
   void iniState() {
     //_passwordVisible = false;
+    dbref = FirebaseDatabase.instance.ref("pelanggan/bottlecash");
     super.initState();
   }
 
@@ -317,20 +341,45 @@ class _RegisPageState extends State<RegisPage> {
                               width: 300,
                               child: ElevatedButton(
                                   onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      if (IsCheked != true) {
-                                        setState(
-                                            () => showErrorMessage == true);
-                                      } else if (IsCheked == false) {
-                                        return null;
-                                      } else {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginPage()));
-                                      }
-                                    }
+                                    _submit();
+                                    // var nama = _nameController.text.trim();
+                                    // var email = _emailController.text.trim();
+                                    // var password = _passController.text.trim();
+                                    // var nohp = _phoneController.text.trim();
+                                    // if (_formKey.currentState!.validate()) {
+                                    //   if (IsCheked != true) {
+                                    //     setState(
+                                    //         () => showErrorMessage == true);
+                                    //   } else if (IsCheked == false) {
+                                    //     return null;
+                                    //   }
+                                    //   try {
+                                    //     UserCredential userCredential =
+                                    //         await authService
+                                    //             .createUserWithEmailAndPassword(
+                                    //                 email:
+                                    //                     _emailController.text,
+                                    //                 password:
+                                    //                     _passController.text);
+                                    //     if (userCredential.user != null) {
+                                    //       String uid = userCredential.user!.uid;
+
+                                    //       await dbref.child(uid).set({
+                                    //         Map <String, String> (
+                                    //           "nama" : nama,
+
+                                    //         )
+                                    //       });
+                                    //     }
+                                    //   } catch (error) {
+                                    //     _showMyDialog();
+                                    //   }
+                                    //   Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               LoginPage()));
+                                    // }
                                     // final isValidForm =
                                     //     _formKey.currentState?.validate();
 
@@ -366,7 +415,7 @@ class _RegisPageState extends State<RegisPage> {
                                             text: 'Sudah Punya Akun?',
                                             style: GoogleFonts.roboto(
                                                 color: Colors.black,
-                                                fontSize: 12,
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.w600))),
                                     SizedBox(
                                       width: 2,
@@ -376,7 +425,7 @@ class _RegisPageState extends State<RegisPage> {
                                             text: 'Login',
                                             style: GoogleFonts.roboto(
                                                 color: Colors.black,
-                                                fontSize: 12,
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.w800)))
                                   ],
                                 ))
@@ -387,6 +436,101 @@ class _RegisPageState extends State<RegisPage> {
               ],
             ),
           )),
+    );
+  }
+
+  void _submit() async {
+    int id = 1;
+    int increment;
+    increment = id++;
+    var counter = 0;
+    do {
+      counter + 1;
+    } while (counter == 1);
+    int koin = 0;
+    int botol = 0;
+    int tutupbotol = 0;
+    int labelbotol = 0;
+    String tukar = " ";
+
+    final ProgressDialog pr = ProgressDialog(context);
+    pr.style(
+      progress: 50.0,
+      message: "Please wait...",
+      progressWidget: Container(
+          padding: EdgeInsets.all(8.0), child: CircularProgressIndicator()),
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+    if (_formKey.currentState!.validate()) {
+      if (IsCheked != true) {
+        setState(() => showErrorMessage == true);
+      } else if (IsCheked == false) {
+        return null;
+      }
+
+      try {
+        UserCredential userCredential =
+            await authService.createUserWithEmailAndPassword(
+                email: _emailController.text.trim(),
+                password: _passController.text.trim());
+        String uid = userCredential.user!.uid;
+        if (userCredential.user != null) {
+          Map<String, dynamic> pelanggan = {
+            'nama': _nameController.text.toString(),
+            'email': _emailController.text.toString(),
+            'password': _passController.text.toString(),
+            'nohp': _phoneController.text.toString(),
+            'saldo': koin,
+            'uid': uid,
+            'botol': botol,
+            'tutupbotol': tutupbotol,
+            'labelbotol': labelbotol,
+            'tukar': tukar
+          };
+          dbref.child('/$uid').set(pelanggan);
+          await pr.show();
+          Fluttertoast.showToast(msg: "Berhasil daftar");
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LoginPage()));
+        } else {
+          Fluttertoast.showToast(msg: "Akun sudah terdaftar");
+        }
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'email-already-in-use') {
+          Fluttertoast.showToast(msg: 'Email Telah Terdaftar');
+        }
+      }
+    }
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Akun telah terdaftar'),
+                Text('Mohon masukkan akun baru'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('tutup'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

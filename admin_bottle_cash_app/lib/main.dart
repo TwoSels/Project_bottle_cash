@@ -1,7 +1,12 @@
 import 'package:admin_bottle_cash_app/Screen/login_page.dart';
+import 'package:admin_bottle_cash_app/authservice/authservice.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -17,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: login_page(),
+      home: AuthService().handleAuthState(),
     );
   }
 }

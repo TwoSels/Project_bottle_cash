@@ -1,10 +1,13 @@
-import 'package:bottle_cash_deployment_app/Home.dart';
+import 'package:bottle_cash_deployment_app/Notifikasi/notifikasi.dart';
+import 'package:bottle_cash_deployment_app/Screen/Home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:checkbox_formfield/checkbox_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class TagihanIndohome extends StatefulWidget {
   TagihanIndohome({Key? key}) : super(key: key);
@@ -17,9 +20,17 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
   final _formKey = GlobalKey<FormState>();
   final String huruf = "[a-z],[A-Z]";
   final Uri _url = Uri.parse('https://flutter.dev');
+  final database = FirebaseDatabase.instance.ref();
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  @override
+  void initstate() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final tukar = database.child('pelanggan/bottlecash');
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.grey),
@@ -42,7 +53,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  height: 590,
+                  height: 600,
                   width: 330,
                   // decoration: BoxDecoration(
                   //   border: Border.all(color: Colors.black),
@@ -73,7 +84,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                               hintText: '08xxxxxxxxxx'),
                           validator: (value) {
                             if (value == null ||
-                                value.length < 10 ||
+                                value.length < 11 ||
                                 value == huruf) {
                               return 'Masukkan Nomor';
                             } else {
@@ -106,7 +117,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                               hintText: '10.000'),
                           validator: (value) {
                             if (value == null ||
-                                value.length < 10 ||
+                                value.length < 5 ||
                                 value == huruf) {
                               return 'Masukkan nominal yang ingin ditukar';
                             } else {
@@ -123,8 +134,13 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                             height: 45,
                             width: 150,
                             child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {}
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  notifikasi_tampil().notifikasiTampil(
+                                      title: 'Penukaran Sedang Berlangsung',
+                                      body: 'mohon ditunggu');
+                                  //await tukar.update({'tukar': 1});
+                                }
                                 // final isValidForm =
                                 //     _formKey.currentState?.validate();
 

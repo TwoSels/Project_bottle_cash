@@ -17,13 +17,13 @@ class _LocationPageState extends State<LocationPage> {
       Completer<GoogleMapController>();
 
   static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
+    target: LatLng(-6.1106106, -6.1106106),
     zoom: 14.4746,
   );
 
   static const CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
+      target: LatLng(-6.1130091, 106.1372607),
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
 

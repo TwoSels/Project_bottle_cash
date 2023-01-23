@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:ui';
-import 'package:bottle_cash_deployment_app/Home.dart';
+import 'package:bottle_cash_deployment_app/Screen/Home.dart';
 import 'package:bottle_cash_deployment_app/Navbar/Persistent_navbar.dart';
 import 'package:bottle_cash_deployment_app/Service_auth/auth_service.dart';
+import 'package:bottle_cash_deployment_app/Screen/resetpassword.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +14,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:localstorage/localstorage.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -24,14 +31,16 @@ class _LoginPageState extends State<LoginPage> {
   final _text = TextEditingController();
   bool IsChecked = false;
   late bool _passwordVisible;
-  TextEditingController email = TextEditingController();
-  TextEditingController pass = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController pass = TextEditingController();
 
+  final LocalStorage storage = new LocalStorage('uid');
   Box? box1;
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = new TextEditingController();
-
+  final TextEditingController _passController = new TextEditingController();
+  final _userProfil = Hive.box('userProfil');
   @override
   void initState() {
     _passwordVisible = false;
@@ -58,6 +67,13 @@ class _LoginPageState extends State<LoginPage> {
       IsChecked = true;
       setState(() {});
     }
+  }
+
+  void dispose() {
+    email.dispose();
+    pass.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -106,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Image.asset("Asset/Logo ABN.png"),
               ),
               Container(
-                height: 340,
+                height: 380,
                 width: 390,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -120,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      height: 300,
+                      height: 330,
                       width: 300,
                       child: Column(
                         children: [
@@ -158,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                                   //Password Textfield
                                   TextFormField(
                                     obscureText: !_passwordVisible,
-                                    controller: pass,
+                                    controller: _passController,
                                     decoration: InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -167,12 +183,12 @@ class _LoginPageState extends State<LoginPage> {
                                             borderRadius:
                                                 BorderRadius.circular(5)),
                                         suffixIcon: GestureDetector(
-                                          onLongPress: () {
+                                          onTap: () {
                                             setState(() {
                                               _passwordVisible = true;
                                             });
                                           },
-                                          onLongPressUp: () {
+                                          onTapCancel: () {
                                             setState(() {
                                               _passwordVisible = false;
                                             });
@@ -233,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                                   onTap: (() => Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => RegisPage(),
+                                        builder: (context) => resetpassword(),
                                       ))),
                                   child: RichText(
                                       text: TextSpan(
@@ -249,14 +265,8 @@ class _LoginPageState extends State<LoginPage> {
                             height: 45,
                             width: 300,
                             child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Persistent_navbar()));
-                                }
+                              onPressed: () async {
+                                _submit();
                                 // final isValidForm =
                                 //     _formKey.currentState?.validate();
 
@@ -399,14 +409,88 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() {
     if (IsChecked) {
-      box1?.put('email', email.text);
-      box1?.put('pass', pass.text);
+      box1?.put('email', _emailController.text);
+      box1?.put('pass', _passController.text);
     }
   }
 
-  void _submit() {
+  void _submit() async {
+    final DatabaseReference database = FirebaseDatabase.instance.ref();
+    final ProgressDialog pr = ProgressDialog(context);
+    pr.style(
+      progress: 50.0,
+      message: "Please wait...",
+      progressWidget: Container(
+          padding: EdgeInsets.all(8.0), child: CircularProgressIndicator()),
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
     if (_formKey.currentState!.validate()) {
-      // TODO SAVE DATA
+      try {
+        final credential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: _emailController.text.trim(),
+                password: _passController.text.trim());
+        //await pr.show();
+        //print(credential.user?.uid);
+        final uid = credential.user?.uid;
+        final userData =
+            await database.child('pelanggan/bottlecash/$uid').get();
+        //final profil = jsonDecode(userData);
+        DatabaseEvent event = await FirebaseDatabase.instance
+            .ref('pelanggan/bottlecash/$uid')
+            .once();
+        //Map<Object?, Object?>.from(event.snapshot.value);
+        final nama = event.snapshot.value;
+        _userProfil.put(1, userData.value);
+        //print(_userProfil.get(1));
+        // print('hasil cek user: $nama');
+        // await storage.setItem('UserData', userData.value);
+        // final cek = storage.getItem('UserData');
+        // print('hasil cek storage: $cek');
+        //final data = await storage.getItem('UserData');
+        //print(data);
+        //print(userData.value);
+        Fluttertoast.showToast(msg: "Berhasil Login");
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => Persistent_navbar()));
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          Fluttertoast.showToast(msg: 'Email belum terdaftar');
+        } else if (e.code == 'wrong-password') {
+          Fluttertoast.showToast(msg: 'Password salah');
+        }
+      }
     }
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Akun belum terdaftar'),
+                Text('Mohon daftar akun dulu ya'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Tutup'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

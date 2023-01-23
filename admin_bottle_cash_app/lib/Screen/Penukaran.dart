@@ -1,34 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class reset_bcash extends StatefulWidget {
-  reset_bcash({Key? key}) : super(key: key);
+class penukaran extends StatefulWidget {
+  penukaran({Key? key}) : super(key: key);
+
   @override
-  State<reset_bcash> createState() => _reset_bcashState();
+  State<penukaran> createState() => _penukaranState();
 }
 
-class _reset_bcashState extends State<reset_bcash> {
+class _penukaranState extends State<penukaran> {
   Query dbref = FirebaseDatabase.instance.ref().child('pelanggan/bottlecash');
   DatabaseReference reference =
       FirebaseDatabase.instance.ref().child('pelanggan/bottlecash');
-  //late DatabaseReference ref;
-  DatabaseReference _dbref =
-      FirebaseDatabase.instance.ref('pelanggan/bottlecash');
-  String databasejson = '';
-
+  late DatabaseReference ref;
   @override
   void initstate() {
     super.initState();
-    //ref = FirebaseDatabase.instance.ref();
-    _dbref = FirebaseDatabase.instance.ref();
+    ref = FirebaseDatabase.instance.ref().child('pelanggan/bottlecash');
   }
 
-  // void getPelanggaData() async {
-  //   DataSnapshot snapshot = (await ref.child(dbref).once()) as DataSnapshot;
-  // }
-  @override
   Widget listItem({required Map pelanggan}) {
     return Container(
       margin: const EdgeInsets.all(10),
@@ -54,7 +45,7 @@ class _reset_bcashState extends State<reset_bcash> {
             height: 5,
           ),
           Text(
-            pelanggan['saldo'],
+            pelanggan['koin'],
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
           Row(
@@ -100,68 +91,12 @@ class _reset_bcashState extends State<reset_bcash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: Text('Reset B-Cash'),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              StreamBuilder(
-                  stream: _dbref.onValue,
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData &&
-                        !snapshot.hasError &&
-                        snapshot.data.snapshot.value != null) {
-                      Map data = snapshot.data.snapshot.value;
-                      List item = [];
-                      data.forEach(
-                          (index, data) => item.add({"key": index, ...data}));
-                      return Expanded(
-                          child: ListView.builder(
-                              itemCount: item.length,
-                              itemBuilder: ((context, index) {
-                                return ListTile(
-                                  leading: GestureDetector(
-                                    onTap: () {},
-                                    child: Icon(Icons.edit_attributes_rounded),
-                                  ),
-                                  trailing: GestureDetector(
-                                    onTap: () {},
-                                    child: Icon(Icons.delete),
-                                  ),
-                                  title: Text(
-                                      "UID pelanggan: ${item[index]['key']}"),
-                                  subtitle: Text(
-                                      'nama: ${item[index]['nama'].toString()} \nemail: ${item[index]['email']}\nsaldo: ${item[index]['saldo']}'),
-                                  isThreeLine: true,
-                                );
-                              })));
-                    } else {
-                      return Center(
-                        child: Text('no data'),
-                      );
-                    }
-                  })
-            ],
-          ),
-        )
-
-        // Container(
-        //   height: double.infinity,
-        //   child: FirebaseAnimatedList(
-        //     query: dbref,
-        //     itemBuilder: (BuildContext context, DataSnapshot snapshot,
-        //         Animation<double> animation, int index) {
-        //       Map pelanggan = snapshot.value as Map;
-        //       pelanggan['key'] = snapshot.key;
-
-        //       return listItem(pelanggan: pelanggan);
-        //     },
-        //   ),
-        // ),
-        );
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Text('Data User Penukaran'),
+      ),
+      body: Container(),
+    );
   }
 
   Future<void> _showMyDialog(pelanggan) async {
@@ -193,7 +128,7 @@ class _reset_bcashState extends State<reset_bcash> {
                   onPressed: () {
                     reference
                         .child(pelanggan['key'])
-                        .update({'koin': _koinbaru});
+                        .update({'koin': _koinbaru.text});
                     Fluttertoast.showToast(msg: 'Berhasil di update');
                     Navigator.of(context).pop();
                   },
