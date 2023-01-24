@@ -1,6 +1,7 @@
 import 'package:admin_bottle_cash_app/Screen/home.dart';
 import 'package:admin_bottle_cash_app/persistent_navbar/persistent_navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -117,6 +118,8 @@ class _login_pageState extends State<login_page> {
                                         .signInWithEmailAndPassword(
                                             email: email.text,
                                             password: pass.text);
+                                    await FirebaseMessaging.instance
+                                        .subscribeToTopic('Penukaran');
                                     Fluttertoast.showToast(
                                         msg: 'Berhasil Login');
                                     Navigator.push(

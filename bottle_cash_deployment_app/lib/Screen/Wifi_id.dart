@@ -1,7 +1,10 @@
+import 'package:bottle_cash_deployment_app/Service_auth/currentuserinfo.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-enum paket_wifi { paket12, paket7, paket30 }
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import '../Notifikasi/notifikasi.dart';
 
 class Wifi_id extends StatefulWidget {
   Wifi_id({Key? key}) : super(key: key);
@@ -11,9 +14,26 @@ class Wifi_id extends StatefulWidget {
 }
 
 class _Wifi_idState extends State<Wifi_id> {
-  paket_wifi? _character = paket_wifi.paket12;
+  final database = FirebaseDatabase.instance.ref();
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+  var pilihan1;
+  @override
+  String? paketWifi_id;
+  void initstate() {
+    super.initState();
+  }
+
+  void _incrementCounter() {
+    setState(() {
+      callOnFcmApiSendPushNotifications(
+          title: 'Penukaran Wifi.Id',
+          body: 'Segera Lihat Halaman Penukaran ya');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final tukar = database.child('pelanggan/bottlecash/$uid/');
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.grey),
@@ -49,41 +69,65 @@ class _Wifi_idState extends State<Wifi_id> {
                                 color: Colors.black,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold))),
-                    ListTile(
-                      title: const Text('Paket 12 Jam Rp. 5.000'),
-                      leading: Radio<paket_wifi>(
-                        value: paket_wifi.paket12,
-                        groupValue: _character,
-                        onChanged: (paket_wifi? value) {
-                          setState(() {
-                            _character = value;
-                          });
-                        },
-                      ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 45,
+                        ),
+                        Radio(
+                            value: 'Paket 12 Jam @wifi.id',
+                            groupValue: paketWifi_id,
+                            onChanged: ((value) {
+                              setState(() {
+                                paketWifi_id = value.toString();
+                              });
+                            })),
+                        Text(
+                          'Paket 12 Jam Rp. 5.000',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
-                    ListTile(
-                      title: const Text('Paket 7 Hari Rp. 20.000'),
-                      leading: Radio<paket_wifi>(
-                        value: paket_wifi.paket7,
-                        groupValue: _character,
-                        onChanged: (paket_wifi? value) {
-                          setState(() {
-                            _character = value;
-                          });
-                        },
-                      ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 45,
+                        ),
+                        Radio(
+                            value: 'Paket 7 hari @wifi.id',
+                            groupValue: paketWifi_id,
+                            onChanged: ((value) {
+                              setState(() {
+                                paketWifi_id = value.toString();
+                              });
+                            })),
+                        Text(
+                          'Paket 7 Hari Rp. 20.000',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
-                    ListTile(
-                      title: const Text('Paket 30 Hari Rp. 50.000'),
-                      leading: Radio<paket_wifi>(
-                        value: paket_wifi.paket30,
-                        groupValue: _character,
-                        onChanged: (paket_wifi? value) {
-                          setState(() {
-                            _character = value;
-                          });
-                        },
-                      ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 45,
+                        ),
+                        Radio(
+                            value: 'Paket 30 Hari @wifi.id',
+                            groupValue: paketWifi_id,
+                            onChanged: ((value) {
+                              setState(() {
+                                paketWifi_id = value.toString();
+                              });
+                            })),
+                        Text(
+                          'Paket 30 Jam Rp. 50.000',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 10,
@@ -92,7 +136,14 @@ class _Wifi_idState extends State<Wifi_id> {
                       height: 45,
                       width: 150,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          _incrementCounter();
+                          notifikasi_tampil().notifikasiTampil(
+                              title: 'Penukaran Sedang Berlangsung',
+                              body: 'mohon ditunggu');
+                          await tukar.update({'tukar': paketWifi_id});
+                          Navigator.pop(context);
+                        },
                         child: const Text('Tukar B-Cash'),
                         style: ElevatedButton.styleFrom(
                             primary: Colors.grey,

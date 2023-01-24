@@ -254,7 +254,7 @@ class _RegisPageState extends State<RegisPage> {
                                       ),
                                       validator: (value) {
                                         if (value == null ||
-                                            value.length < 10) {
+                                            value.length < 11) {
                                           return 'Masukkan Nomor HP Anda';
                                         } else {
                                           return null;
@@ -447,10 +447,10 @@ class _RegisPageState extends State<RegisPage> {
     do {
       counter + 1;
     } while (counter == 1);
-    int koin = 0;
-    int botol = 0;
-    int tutupbotol = 0;
-    int labelbotol = 0;
+    String koin = "0";
+    String botol = "0";
+    String tutupbotol = "0";
+    String labelbotol = "0";
     String tukar = " ";
 
     final ProgressDialog pr = ProgressDialog(context);

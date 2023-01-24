@@ -41,6 +41,13 @@
             {
               "client_id": "723788646343-mitur8sphdj3vq8vd94ndq3qs45cehm2.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "723788646343-67seo8s55n289kksmacug9nkcmfvg4pe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.adminBottleCashApp"
+              }
             }
           ]
         }
@@ -81,6 +88,13 @@
             {
               "client_id": "723788646343-mitur8sphdj3vq8vd94ndq3qs45cehm2.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "723788646343-67seo8s55n289kksmacug9nkcmfvg4pe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.adminBottleCashApp"
+              }
             }
           ]
         }

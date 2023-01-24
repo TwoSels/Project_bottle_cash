@@ -1,7 +1,11 @@
+import 'package:bottle_cash_deployment_app/Service_auth/currentuserinfo.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-enum paket_wifi { paket1, paket2, paket3 }
+import '../Notifikasi/notifikasi.dart';
 
 class SODPage extends StatefulWidget {
   SODPage({Key? key}) : super(key: key);
@@ -11,9 +15,26 @@ class SODPage extends StatefulWidget {
 }
 
 class _SODPageState extends State<SODPage> {
-  paket_wifi? _character = paket_wifi.paket1;
+  String? paketSOD;
+  final database = FirebaseDatabase.instance.ref();
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+
+  @override
+  void initstate() {
+    super.initState();
+  }
+
+  void _incrementCounter() {
+    setState(() {
+      callOnFcmApiSendPushNotifications(
+          title: 'Penukaran Speed On Demand',
+          body: 'Segera Lihat Halaman Penukaran ya');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final tukar = database.child('pelanggan/bottlecash/$uid/');
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.grey),
@@ -49,41 +70,65 @@ class _SODPageState extends State<SODPage> {
                                 color: Colors.black,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold))),
-                    ListTile(
-                      title: const Text('1 Day Boost 30 Mbps \nRp. 40.000'),
-                      leading: Radio<paket_wifi>(
-                        value: paket_wifi.paket1,
-                        groupValue: _character,
-                        onChanged: (paket_wifi? value) {
-                          setState(() {
-                            _character = value;
-                          });
-                        },
-                      ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Radio(
+                            value: '1 Day Boost 30Mbps Speed On Demand',
+                            groupValue: paketSOD,
+                            onChanged: ((value) {
+                              setState(() {
+                                paketSOD = value.toString();
+                              });
+                            })),
+                        Text(
+                          '1 Day Boost 30Mbps Rp. 40.000',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
-                    ListTile(
-                      title: const Text('1 Day Boost 40 Mbps \nRp. 74.000'),
-                      leading: Radio<paket_wifi>(
-                        value: paket_wifi.paket2,
-                        groupValue: _character,
-                        onChanged: (paket_wifi? value) {
-                          setState(() {
-                            _character = value;
-                          });
-                        },
-                      ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Radio(
+                            value: '1 Day Boost 40Mbps',
+                            groupValue: paketSOD,
+                            onChanged: ((value) {
+                              setState(() {
+                                paketSOD = value.toString();
+                              });
+                            })),
+                        Text(
+                          '1 Day Boost 40Mbps Rp. 74.000',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
-                    ListTile(
-                      title: const Text('7 Day Boost 40 Mbps \n Rp. 260.000'),
-                      leading: Radio<paket_wifi>(
-                        value: paket_wifi.paket3,
-                        groupValue: _character,
-                        onChanged: (paket_wifi? value) {
-                          setState(() {
-                            _character = value;
-                          });
-                        },
-                      ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Radio(
+                            value: '7 Day Boost 40Mbps',
+                            groupValue: paketSOD,
+                            onChanged: ((value) {
+                              setState(() {
+                                paketSOD = value.toString();
+                              });
+                            })),
+                        Text(
+                          '7 Day Boost 30Mbps Rp. 260.000',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 30,
@@ -92,7 +137,14 @@ class _SODPageState extends State<SODPage> {
                       height: 45,
                       width: 150,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          _incrementCounter();
+                          notifikasi_tampil().notifikasiTampil(
+                              title: 'Penukaran Sedang Berlangsung',
+                              body: 'mohon ditunggu');
+                          await tukar.update({'tukar': paketSOD});
+                          Navigator.pop(context);
+                        },
                         child: const Text('Tukar B-Cash'),
                         style: ElevatedButton.styleFrom(
                             primary: Colors.grey,

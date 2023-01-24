@@ -5,6 +5,7 @@ import 'package:admin_bottle_cash_app/Screen/reset_kodegembok.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -81,27 +82,27 @@ class _homeState extends State<home> {
                   SizedBox(
                     height: 20,
                   ),
+                  // SizedBox(
+                  //   height: 50,
+                  //   width: 200,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => reset_bcash()));
+                  //     },
+                  //     child: Text('Reset B-Cash User'),
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
                   SizedBox(
                     height: 50,
                     width: 200,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => reset_bcash()));
-                      },
-                      child: Text('Reset B-Cash User'),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    height: 50,
-                    width: 200,
-                    child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         Navigator.push(
                             context,
                             MaterialPageRoute(

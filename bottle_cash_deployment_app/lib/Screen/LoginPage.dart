@@ -5,6 +5,7 @@ import 'package:bottle_cash_deployment_app/Navbar/Persistent_navbar.dart';
 import 'package:bottle_cash_deployment_app/Service_auth/auth_service.dart';
 import 'package:bottle_cash_deployment_app/Screen/resetpassword.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:passwordfield/passwordfield.dart';
@@ -417,6 +418,7 @@ class _LoginPageState extends State<LoginPage> {
   void _submit() async {
     final DatabaseReference database = FirebaseDatabase.instance.ref();
     final ProgressDialog pr = ProgressDialog(context);
+
     pr.style(
       progress: 50.0,
       message: "Please wait...",
@@ -443,9 +445,11 @@ class _LoginPageState extends State<LoginPage> {
         DatabaseEvent event = await FirebaseDatabase.instance
             .ref('pelanggan/bottlecash/$uid')
             .once();
+
         //Map<Object?, Object?>.from(event.snapshot.value);
         final nama = event.snapshot.value;
         _userProfil.put(1, userData.value);
+        await FirebaseMessaging.instance.subscribeToTopic('Penukaran');
         //print(_userProfil.get(1));
         // print('hasil cek user: $nama');
         // await storage.setItem('UserData', userData.value);

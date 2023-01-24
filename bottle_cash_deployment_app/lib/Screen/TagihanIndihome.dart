@@ -1,13 +1,18 @@
 import 'package:bottle_cash_deployment_app/Notifikasi/notifikasi.dart';
 import 'package:bottle_cash_deployment_app/Screen/Home.dart';
+import 'package:bottle_cash_deployment_app/Service_auth/currentuserinfo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:checkbox_formfield/checkbox_formfield.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+import 'LoginPage.dart';
 
 class TagihanIndohome extends StatefulWidget {
   TagihanIndohome({Key? key}) : super(key: key);
@@ -22,15 +27,27 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
   final Uri _url = Uri.parse('https://flutter.dev');
   final database = FirebaseDatabase.instance.ref();
   FirebaseAuth auth = FirebaseAuth.instance;
+  DatabaseReference kirim = FirebaseDatabase.instance.ref();
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+  TextEditingController bcash = new TextEditingController();
 
   @override
   void initstate() {
+    requestpermission();
     super.initState();
+  }
+
+  void _incrementCounter() {
+    setState(() {
+      callOnFcmApiSendPushNotifications(
+          title: 'Penukaran Indihome',
+          body: 'Segera Lihat Halaman Penukaran ya');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final tukar = database.child('pelanggan/bottlecash');
+    final tukar = database.child('pelanggan/bottlecash/$uid/');
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.grey),
@@ -107,6 +124,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                         ),
                         TextFormField(
                           obscureText: false,
+                          controller: bcash,
                           decoration: InputDecoration(
                               prefixIcon:
                                   Icon(CupertinoIcons.money_rubl_circle_fill),
@@ -135,11 +153,16 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                             width: 150,
                             child: ElevatedButton(
                               onPressed: () async {
+                                var saldo = bcash.text;
                                 if (_formKey.currentState!.validate()) {
                                   notifikasi_tampil().notifikasiTampil(
                                       title: 'Penukaran Sedang Berlangsung',
                                       body: 'mohon ditunggu');
-                                  //await tukar.update({'tukar': 1});
+                                  _incrementCounter();
+                                  await tukar.update({
+                                    'tukar': '$saldo penukaran tagihan indihome'
+                                  });
+                                  Navigator.pop(context);
                                 }
                                 // final isValidForm =
                                 //     _formKey.currentState?.validate();

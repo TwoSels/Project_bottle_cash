@@ -8,8 +8,10 @@ import 'package:bottle_cash_deployment_app/Screen/Wifi_id.dart';
 import 'package:bottle_cash_deployment_app/Service_auth/currentuserinfo.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -23,6 +25,8 @@ import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 
+import '../Notifikasi/notifikasi.dart';
+
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
 
@@ -34,40 +38,42 @@ class _HomeState extends State<Home> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   late User currentuser = auth.currentUser!;
   DatabaseReference ref = FirebaseDatabase.instance.ref();
-  Query dbref = FirebaseDatabase.instance.ref().child('pelanggan/bottlecash');
+  Query dbref = FirebaseDatabase.instance.ref();
   final database = FirebaseDatabase.instance.ref();
   final LocalStorage storage = new LocalStorage('uid');
   final _userProfil = Hive.box('userProfil');
+  String uid = FirebaseAuth.instance.currentUser!.uid;
   String _name = "";
+  final User user = FirebaseAuth.instance.currentUser!;
+  DatabaseReference _dbref =
+      FirebaseDatabase.instance.ref('pelanggan/bottlecash');
+  String cekUid = FirebaseAuth.instance.currentUser!.uid;
+  DatabaseReference profil = FirebaseDatabase.instance.ref();
+
+  String? mtoken = " ";
 
   AuthService authService = AuthService();
+  var nama;
+  var emailuser;
+  var nohpuser;
+  var saldouser;
+  var botoluser;
+  var laberuser;
+  var tutupuser;
 
   @override
   void initState() {
     final userData = storage.getItem('UserData');
+    final viewData = _userProfil.get(1);
     //final Profil = jsonDecode(userData);
+    requestpermission();
+    profilberubah();
     super.initState();
-    // FirebaseDatabase.instance
-    //     .ref('pelanggan/bottlecash')
-    //     .once()
-    //     .then((DataSnapshot snapshot) {
-    //   print(snapshot.value);
-    // });
     setState(() {
       //_name = userData.name;
     });
     //print(Profil);
   }
-
-  // Widget listView({required Map pelanggan}) {
-  //   return Column(
-  //     children: [
-  //       Text(pelanggan['nama']),
-  //       Text(pelanggan['email']),
-  //       Text(pelanggan['nohp'])
-  //     ],
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -139,20 +145,14 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     //tambah gambar dari user
-                    // ProfilePicture(
-                    //   name: 'Anya',
-                    //   radius: 29,
-                    //   fontsize: 21,
-                    //   random: true,
-                    // ),
                     CircleAvatar(
                       backgroundColor: Colors.green,
                       backgroundImage: AssetImage('Asset/profil.png'),
-                      radius: 30,
+                      radius: 35,
                     ),
                     Container(
-                        height: 70,
-                        width: 160,
+                        height: 80,
+                        width: 200,
                         // decoration:
                         //     BoxDecoration(border: Border.all(color: Colors.black)),
                         child: Align(
@@ -164,63 +164,24 @@ class _HomeState extends State<Home> {
                               SizedBox(
                                 height: 10,
                               ),
-                              // Expanded(
-                              //   child: StreamBuilder <QuerySnapshot> (
-                              //   stream: FirebaseDatabase.instance.ref('pelanggan/bottlecash').child('/').get(),
-                              //   builder: (context, snapshot) {
-                              //   return
-                              //   })),
-
-                              // Container(
-                              //   height: 50,
-                              //   child: FirebaseAnimatedList(
-                              //       query: dbref,
-                              //       itemBuilder:
-                              //           ((context, snapshot, animation, index) {
-                              //         print(context);
-                              //         print(snapshot);
-                              //         print(animation);
-                              //         print(index);
-                              //         if (currentuser.uid == true ||
-                              //             currentuser. != null) {
-                              //           Map pelanggan = snapshot.value as Map;
-                              //           pelanggan['key'] = snapshot.key;
-                              //           return listView(pelanggan: pelanggan);
-                              //         }
-                              //         return Text('no user');
-                              //       })),
-                              // ),
-                              //Text(FirebaseAuth.instance.currentUser!.email!),
-
-                              // Text(FirebaseDatabase.instance
-                              //     .ref('pelanggan/bottlecash')
-                              //     .child('nohp')
-                              //     .get()
-                              //     .toString()),
-
-                              // // get nama user dari database
-
-                              // RichText(
-                              //     text: TextSpan(
-                              //         text: '%nama user%',
-                              //         style: GoogleFonts.roboto(
-                              //             color: Colors.black,
-                              //             fontSize: 20,
-                              //             fontWeight: FontWeight.bold))),
-                              // //get email user dari database
-                              // Text(
-                              //   FirebaseAuth.instance.currentUser!.email!,
-                              //   style: TextStyle(fontSize: 14),
-                              // ),
-
-                              // //get nomor hp user dari database
-                              // RichText(
-                              //     text: TextSpan(
-                              //         text: '%nomor user%',
-                              //         style: GoogleFonts.roboto(
-                              //             color: Colors.black,
-                              //             fontSize: 12,
-                              //             fontWeight: FontWeight.w400))),
+                              //get nama dari user
+                              Text(
+                                '$nama',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w800),
+                              ),
+                              // get email dari user
+                              Text(
+                                '$emailuser',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w700),
+                              ),
+                              //get nohp user
+                              Text(
+                                '$nohpuser',
+                                style: TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.w600),
+                              )
                             ],
                           ),
                         )),
@@ -237,9 +198,7 @@ class _HomeState extends State<Home> {
                               color: Colors.black,
                               fontSize: 14,
                               fontWeight: FontWeight.w700))),
-                  onTap: () async {
-                    print(_userProfil.get(1));
-                  }),
+                  onTap: () async {}),
               ListTile(
                 leading: Icon(CupertinoIcons.bell_solid),
                 iconColor: Colors.black,
@@ -418,17 +377,13 @@ class _HomeState extends State<Home> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w600))),
-                                                RichText(
-                                                    text: TextSpan(
-                                                        text: '0',
-                                                        style:
-                                                            GoogleFonts.roboto(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 13,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500))),
+                                                Text(
+                                                  '$saldouser',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                )
                                               ],
                                             )
                                           ],
@@ -482,20 +437,38 @@ class _HomeState extends State<Home> {
                                                                     FontWeight
                                                                         .w500))),
                                                 SizedBox(
-                                                  height: 5,
+                                                  height: 3,
                                                 ),
-                                                RichText(
-                                                    text: TextSpan(
-                                                        text:
-                                                            '0 Pcs Botol Plastik 0 Pcs Tutup Botol 0 Pcs Label',
-                                                        style:
-                                                            GoogleFonts.roboto(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600))),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      '$botoluser pcs Botol Plastik',
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Text(
+                                                        '$tutupuser pcs Tutup Botol',
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500)),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                Text(
+                                                    '$laberuser pcs Label Botol',
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500)),
                                                 SizedBox(
                                                   height: 5,
                                                 ),
@@ -834,43 +807,22 @@ class _HomeState extends State<Home> {
         ));
   }
 
-  Future<DataSnapshot> snapshot() {
-    if (currentuser.uid == auth || currentuser == true) {}
-    return snapshot();
-  }
-
-  cekuid() async {
-    final uid = storage.getItem('uid');
-    DatabaseReference coba = FirebaseDatabase.instance.ref();
-    final data = await coba.child('/pelanggan/bottlecash/$uid').get();
-    print('data value = $data.value');
-    print('cek storage = $uid');
-    return data.value;
-    // print(storage.getItem('uid'));
-    //await ref.set({'name': '2000'});
-    // final cek = await ref.child('pelanggan/bottlecash').get();
-    // if (cek.exists) {
-    //   print(cek.value);
-    // } else {
-    //   print('No data available.');
-    // }
-    // print(cek.value);
-  }
-
-  Future<void> _deleteCacheDir() async {
-    final tempDir = await getTemporaryDirectory();
-
-    if (tempDir.existsSync()) {
-      tempDir.deleteSync(recursive: true);
-    }
-  }
-
-  Future<void> _deleteAppDir() async {
-    final appDocDir = await getApplicationDocumentsDirectory();
-
-    if (appDocDir.existsSync()) {
-      appDocDir.deleteSync(recursive: true);
-    }
+  void profilberubah() {
+    profil.child('/pelanggan/bottlecash/$cekUid/').onValue.listen((event) {
+      //print(event.snapshot.value.toString());
+      Map profiluser = event.snapshot.value as Map;
+      profiluser.forEach((key, value) {
+        setState(() {
+          nama = profiluser['nama'];
+          emailuser = profiluser['email'];
+          nohpuser = profiluser['nohp'];
+          saldouser = profiluser['saldo'];
+          botoluser = profiluser['botol'];
+          tutupuser = profiluser['tutupbotol'];
+          laberuser = profiluser['labelbotol'];
+        });
+      });
+    });
   }
 
   void logout() async {

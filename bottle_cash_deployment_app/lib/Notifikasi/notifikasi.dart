@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class notifikasi_tampil {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -32,4 +33,24 @@ notificationDetails() {
           icon: "@mipmap/icon_logo",
           priority: Priority.max,
           importance: Importance.max));
+}
+
+void requestpermission() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('user granted permission');
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    print('user granted provisionam permission');
+  } else {
+    print('user declined or has not accepted permission');
+  }
 }
