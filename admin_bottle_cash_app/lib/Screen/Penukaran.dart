@@ -44,29 +44,29 @@ class _penukaranState extends State<penukaran> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            pelanggan['nama'],
+            'Nama: ' + pelanggan['nama'],
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
           const SizedBox(
             height: 5,
           ),
           Text(
-            pelanggan['email'],
+            'Email: ' + pelanggan['email'],
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
           const SizedBox(
             height: 5,
           ),
           Text(
-            pelanggan['nohp'],
+            'Nomor Hp: ' + pelanggan['nohp'],
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
           Text(
-            pelanggan['saldo'],
+            'Saldo: ' + pelanggan['saldo'],
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
           Text(
-            pelanggan['tukar'],
+            'Kategori Penukaran: ' + pelanggan['tukar'],
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
           Row(
@@ -220,9 +220,7 @@ class _penukaranState extends State<penukaran> {
                 TextButton(
                   child: const Text('Ya'),
                   onPressed: () {
-                    reference
-                        .child(pelanggan['key'])
-                        .update({'tukar': 'kosong'});
+                    reference.child(pelanggan['key']).update({'tukar': '-'});
                     Fluttertoast.showToast(msg: 'Berhasil di update');
                     Navigator.of(context).pop();
                   },
