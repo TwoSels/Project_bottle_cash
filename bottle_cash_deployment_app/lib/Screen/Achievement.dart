@@ -31,10 +31,7 @@ class _AchievmentPageState extends State<AchievmentPage> {
   void initState() {
     super.initState();
     getprofil();
-    setState(() {
-      //_name = userData.name;
-    });
-    //print(Profil);
+    setState(() {});
   }
 
   Widget AchievmentCard() => Container(

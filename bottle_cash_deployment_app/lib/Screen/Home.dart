@@ -37,20 +37,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   late User currentuser = auth.currentUser!;
-  DatabaseReference ref = FirebaseDatabase.instance.ref();
-  Query dbref = FirebaseDatabase.instance.ref();
-  final database = FirebaseDatabase.instance.ref();
   final LocalStorage storage = new LocalStorage('uid');
   final _userProfil = Hive.box('userProfil');
   String uid = FirebaseAuth.instance.currentUser!.uid;
   String _name = "";
   final User user = FirebaseAuth.instance.currentUser!;
-  DatabaseReference _dbref =
-      FirebaseDatabase.instance.ref('pelanggan/bottlecash');
   String cekUid = FirebaseAuth.instance.currentUser!.uid;
   DatabaseReference profil = FirebaseDatabase.instance.ref();
-
-  String? mtoken = " ";
 
   AuthService authService = AuthService();
   var nama;

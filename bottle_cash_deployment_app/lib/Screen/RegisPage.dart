@@ -342,50 +342,6 @@ class _RegisPageState extends State<RegisPage> {
                               child: ElevatedButton(
                                   onPressed: () {
                                     _submit();
-                                    // var nama = _nameController.text.trim();
-                                    // var email = _emailController.text.trim();
-                                    // var password = _passController.text.trim();
-                                    // var nohp = _phoneController.text.trim();
-                                    // if (_formKey.currentState!.validate()) {
-                                    //   if (IsCheked != true) {
-                                    //     setState(
-                                    //         () => showErrorMessage == true);
-                                    //   } else if (IsCheked == false) {
-                                    //     return null;
-                                    //   }
-                                    //   try {
-                                    //     UserCredential userCredential =
-                                    //         await authService
-                                    //             .createUserWithEmailAndPassword(
-                                    //                 email:
-                                    //                     _emailController.text,
-                                    //                 password:
-                                    //                     _passController.text);
-                                    //     if (userCredential.user != null) {
-                                    //       String uid = userCredential.user!.uid;
-
-                                    //       await dbref.child(uid).set({
-                                    //         Map <String, String> (
-                                    //           "nama" : nama,
-
-                                    //         )
-                                    //       });
-                                    //     }
-                                    //   } catch (error) {
-                                    //     _showMyDialog();
-                                    //   }
-                                    //   Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) =>
-                                    //               LoginPage()));
-                                    // }
-                                    // final isValidForm =
-                                    //     _formKey.currentState?.validate();
-
-                                    // // if (isValidForm){
-
-                                    // // }
                                   },
                                   child: const Text('Daftar'),
                                   style: ElevatedButton.styleFrom(
