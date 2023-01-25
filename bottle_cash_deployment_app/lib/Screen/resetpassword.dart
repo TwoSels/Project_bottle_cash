@@ -88,13 +88,22 @@ class _resetpasswordState extends State<resetpassword> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              resetpass();
-
-                              Fluttertoast.showToast(msg: "Berhasil Login");
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginPage()));
+                              try {
+                                await FirebaseAuth.instance
+                                    .sendPasswordResetEmail(
+                                        email: _emailController.text);
+                                Fluttertoast.showToast(
+                                    msg: "Silahkan Cek Email");
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()));
+                              } on FirebaseAuthException catch (e) {
+                                if (e.code == 'user-not-found') {
+                                  Fluttertoast.showToast(
+                                      msg: 'Email Tidak Ada');
+                                }
+                              }
                             }
                             // final isValidForm =
                             //     _formKey.currentState?.validate();
@@ -123,8 +132,5 @@ class _resetpasswordState extends State<resetpassword> {
     );
   }
 
-  void resetpass() async {
-    await FirebaseAuth.instance
-        .sendPasswordResetEmail(email: _emailController.text);
-  }
+  void resetpass() async {}
 }
