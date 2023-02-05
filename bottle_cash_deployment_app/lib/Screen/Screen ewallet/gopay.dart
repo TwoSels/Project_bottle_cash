@@ -102,7 +102,7 @@ class _gopayState extends State<gopay> {
                               hintText: '08xxxxxxxxxx'),
                           validator: (value) {
                             if (value == null ||
-                                value.length < 11 ||
+                                value.length < 10 ||
                                 value == huruf) {
                               return 'Masukkan Nomor';
                             } else {

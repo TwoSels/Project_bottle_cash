@@ -75,7 +75,7 @@ class _editnohpState extends State<editnohp> {
                                 hintText: '08xxxxxxxxxx',
                               ),
                               validator: (value) {
-                                if (value == null || value.length < 11) {
+                                if (value == null || value.length < 10) {
                                   return 'Masukkan Nomor HP Anda';
                                 } else {
                                   return null;

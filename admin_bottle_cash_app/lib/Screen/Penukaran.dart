@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,6 +16,7 @@ class penukaran extends StatefulWidget {
 
 class _penukaranState extends State<penukaran> {
   Query dbref = FirebaseDatabase.instance.ref().child('pelanggan/bottlecash');
+
   DatabaseReference reference =
       FirebaseDatabase.instance.ref().child('pelanggan/bottlecash');
   late DatabaseReference ref;
@@ -34,10 +36,13 @@ class _penukaranState extends State<penukaran> {
   }
 
   Widget listItem({required Map pelanggan}) {
+    Query transaksi = FirebaseDatabase.instance
+        .ref()
+        .child('pelanggan/bottlecash/$uid/history penukaran/');
     return Container(
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(10),
-      height: 150,
+      height: 300,
       color: Colors.amberAccent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -61,14 +66,40 @@ class _penukaranState extends State<penukaran> {
             'Nomor Hp: ' + pelanggan['nohp'],
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
+          const SizedBox(
+            height: 5,
+          ),
           Text(
             'Saldo: ' + pelanggan['saldo'],
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+          ),
+          const SizedBox(
+            height: 5,
           ),
           Text(
             'Kategori Penukaran: ' + pelanggan['tukar'],
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
+          
+    FirebaseDatabase cektransaksi = FirebaseDatabase.instance;
+    FirebaseAnimatedList(
+      query: transaksi,
+      itemBuilder: ((context, snapshot, animation, index) {
+        Map hslpenukaran = snapshot.value as Map;
+        hslpenukaran['key'] = snapshot.key;
+        print(hslpenukaran);
+        return Container(
+          height: double.infinity,
+          child: Column(
+            children: [Text(hslpenukaran['tukar'])],
+          ),
+        );
+      }),
+    );
+          const SizedBox(
+            height: 5,
+          ),
+          
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -146,6 +177,10 @@ class _penukaranState extends State<penukaran> {
         ),
       ),
     );
+  }
+
+  void lihatPenukaran() {
+    
   }
 
   Future<void> _resetsaldo(pelanggan) async {

@@ -39,8 +39,8 @@ class _AchievmentPageState extends State<AchievmentPage> {
   }
 
   Widget AchievmentCard() => Container(
+        height: 456,
         width: 360,
-        height: 430,
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -86,13 +86,6 @@ class _AchievmentPageState extends State<AchievmentPage> {
                                 color: Colors.black,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold))),
-                    RichText(
-                        text: TextSpan(
-                            text: 'Sejak Des 2022',
-                            style: GoogleFonts.roboto(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700))),
                   ],
                 ),
                 Container(
@@ -273,7 +266,34 @@ class _AchievmentPageState extends State<AchievmentPage> {
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 16,
+                  ),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 77,
+                          ),
+                          SizedBox(
+                            height: 28,
+                            width: 28,
+                            child: Image.asset('Asset/instagram.png'),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            '@bottle.cash',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Text(
                     '#SemuanyaberNilai',
@@ -365,7 +385,7 @@ class _AchievmentPageState extends State<AchievmentPage> {
                     ),
                   ),
                   SizedBox(
-                    height: 100,
+                    height: 76,
                     width: 120,
                     child: Image.asset("Asset/gambarlogo.png"),
                   ),

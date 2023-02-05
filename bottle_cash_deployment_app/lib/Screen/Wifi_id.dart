@@ -165,7 +165,7 @@ class _Wifi_idState extends State<Wifi_id> {
                             Fluttertoast.showToast(msg: 'Saldo kamu kurang');
                           } else {
                             ceksaldo -= hargawifi_id;
-                            _incrementCounter();
+                            //_incrementCounter();
                             notifikasi_tampil().notifikasiTampil(
                                 title: 'Penukaran Sedang Berlangsung',
                                 body: 'mohon ditunggu');

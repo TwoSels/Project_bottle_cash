@@ -76,7 +76,7 @@ class _nomorindihoneState extends State<nomorindihone> {
                                 hintText: '$nomorindihome',
                               ),
                               validator: (value) {
-                                if (value == null || value.length < 11) {
+                                if (value == null || value.length < 10) {
                                   return 'Masukkan Nomor IndiHome Kamu';
                                 } else {
                                   return null;

@@ -25,6 +25,7 @@ class TagihanIndohome extends StatefulWidget {
 class _TagihanIndohomeState extends State<TagihanIndohome> {
   final _formKey = GlobalKey<FormState>();
   final String huruf = "[a-z],[A-Z]";
+  final String spasi = " ";
   final Uri _url = Uri.parse('https://flutter.dev');
   final database = FirebaseDatabase.instance.ref();
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -117,9 +118,10 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                               hintText: '08xxxxxxxxxx'),
                           validator: (value) {
                             if (value == null ||
-                                value.length < 11 ||
-                                value == huruf) {
-                              return 'Masukkan Nomor';
+                                value.length < 10 ||
+                                value == huruf ||
+                                value == spasi) {
+                              return 'Masukkan Nomor IndiHome';
                             } else {
                               return null;
                             }

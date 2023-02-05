@@ -263,7 +263,7 @@ class _RegisPageState extends State<RegisPage> {
                                       ),
                                       validator: (value) {
                                         if (value == null ||
-                                            value.length < 11) {
+                                            value.length < 10) {
                                           return 'Masukkan Nomor HP Anda';
                                         } else {
                                           return null;
