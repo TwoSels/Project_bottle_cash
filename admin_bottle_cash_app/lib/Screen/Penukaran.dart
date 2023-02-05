@@ -1,3 +1,4 @@
+import 'package:admin_bottle_cash_app/Screen/history.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -16,13 +17,17 @@ class penukaran extends StatefulWidget {
 
 class _penukaranState extends State<penukaran> {
   Query dbref = FirebaseDatabase.instance.ref().child('pelanggan/bottlecash');
-
+  Query transaksi = FirebaseDatabase.instance
+      .ref()
+      .child('pelanggan/bottlecash/history penukaran');
   DatabaseReference reference =
       FirebaseDatabase.instance.ref().child('pelanggan/bottlecash');
   late DatabaseReference ref;
   String uid = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   void initstate() {
+    lihatPenukaran();
     super.initState();
     ref = FirebaseDatabase.instance.ref().child('pelanggan/bottlecash/$uid');
   }
@@ -36,13 +41,10 @@ class _penukaranState extends State<penukaran> {
   }
 
   Widget listItem({required Map pelanggan}) {
-    Query transaksi = FirebaseDatabase.instance
-        .ref()
-        .child('pelanggan/bottlecash/$uid/history penukaran/');
     return Container(
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(10),
-      height: 300,
+      height: 190,
       color: Colors.amberAccent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -80,26 +82,16 @@ class _penukaranState extends State<penukaran> {
             'Kategori Penukaran: ' + pelanggan['tukar'],
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
-          
-    FirebaseDatabase cektransaksi = FirebaseDatabase.instance;
-    FirebaseAnimatedList(
-      query: transaksi,
-      itemBuilder: ((context, snapshot, animation, index) {
-        Map hslpenukaran = snapshot.value as Map;
-        hslpenukaran['key'] = snapshot.key;
-        print(hslpenukaran);
-        return Container(
-          height: double.infinity,
-          child: Column(
-            children: [Text(hslpenukaran['tukar'])],
-          ),
-        );
-      }),
-    );
           const SizedBox(
             height: 5,
           ),
-          
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => history()));
+            },
+            child: Text('history'),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -180,7 +172,7 @@ class _penukaranState extends State<penukaran> {
   }
 
   void lihatPenukaran() {
-    
+    DatabaseReference cektransaksi = FirebaseDatabase.instance.ref();
   }
 
   Future<void> _resetsaldo(pelanggan) async {
