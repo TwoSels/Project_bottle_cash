@@ -2,6 +2,7 @@ import 'package:bottle_cash_deployment_app/Screen/Achievement.dart';
 import 'package:bottle_cash_deployment_app/Screen/Home.dart';
 import 'package:bottle_cash_deployment_app/Screen/Location.dart';
 import 'package:bottle_cash_deployment_app/Screen/bantuan.dart';
+import 'package:bottle_cash_deployment_app/Screen/historytransaksi.dart';
 import 'package:bottle_cash_deployment_app/Screen/scanqr_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
@@ -17,7 +18,13 @@ class Persistent_navbar extends StatelessWidget {
 
     _controller = PersistentTabController(initialIndex: 0);
     List<Widget> _buildScreens() {
-      return [Home(), AchievmentPage(), halaman_bantuan(), LocationPage()];
+      return [
+        Home(),
+        AchievmentPage(),
+        historytransaksi(),
+        halaman_bantuan(),
+        LocationPage()
+      ];
     }
 
     List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -34,6 +41,11 @@ class Persistent_navbar extends StatelessWidget {
           activeColorPrimary: CupertinoColors.activeGreen,
           inactiveColorPrimary: CupertinoColors.systemGrey,
         ),
+        PersistentBottomNavBarItem(
+            icon: Icon(Icons.history_rounded),
+            title: ("Transaksi"),
+            activeColorPrimary: CupertinoColors.activeGreen,
+            inactiveColorPrimary: CupertinoColors.systemGrey),
         PersistentBottomNavBarItem(
           icon: Icon(CupertinoIcons.chat_bubble_text),
           title: ("Bantuan"),

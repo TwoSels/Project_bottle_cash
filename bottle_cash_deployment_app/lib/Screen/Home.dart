@@ -1,6 +1,10 @@
 import 'package:bottle_cash_deployment_app/Screen/Achievement.dart';
 import 'package:bottle_cash_deployment_app/Screen/LoginPage.dart';
 import 'package:bottle_cash_deployment_app/Navbar/slidingup_panel.dart';
+import 'package:bottle_cash_deployment_app/Screen/editprofile.dart';
+import 'package:bottle_cash_deployment_app/Screen/ewallet.dart';
+import 'package:bottle_cash_deployment_app/Screen/nomorindihone.dart';
+import 'package:bottle_cash_deployment_app/Screen/notifikasipage.dart';
 import 'package:bottle_cash_deployment_app/Service_auth/auth_service.dart';
 import 'package:bottle_cash_deployment_app/Screen/SpeedOnDemand.dart';
 import 'package:bottle_cash_deployment_app/Screen/TagihanIndihome.dart';
@@ -44,8 +48,9 @@ class _HomeState extends State<Home> {
   final User user = FirebaseAuth.instance.currentUser!;
   String cekUid = FirebaseAuth.instance.currentUser!.uid;
   DatabaseReference profil = FirebaseDatabase.instance.ref();
-
+  final foto = FirebaseDatabase.instance.ref('pelanggan/bottlecash');
   AuthService authService = AuthService();
+
   var nama;
   var emailuser;
   var nohpuser;
@@ -53,19 +58,13 @@ class _HomeState extends State<Home> {
   var botoluser;
   var laberuser;
   var tutupuser;
+  var imageurl;
 
   @override
   void initState() {
-    final userData = storage.getItem('UserData');
-    final viewData = _userProfil.get(1);
-    //final Profil = jsonDecode(userData);
     requestpermission();
     profilberubah();
     super.initState();
-    setState(() {
-      //_name = userData.name;
-    });
-    //print(Profil);
   }
 
   @override
@@ -102,18 +101,48 @@ class _HomeState extends State<Home> {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
+                  children: <Widget>[
                     // ProfilePicture(
                     //   name: 'Anya',
                     //   radius: 29,
                     //   fontsize: 21,
                     //   random: true,
                     // ),
-                    CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      backgroundImage: AssetImage('Asset/profil.png'),
-                      radius: 30,
+                    Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image(
+                          fit: BoxFit.cover,
+                          image: NetworkImage('$imageurl'),
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              child: Icon(
+                                Icons.error_outline,
+                                color: Colors.green,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
+
+                    // CircleAvatar(
+                    //   backgroundColor: Colors.grey,
+                    //   backgroundImage: NetworkImage(
+                    //       'https://www.its.ac.id/international/wp-content/uploads/sites/66/2020/02/blank-profile-picture-973460_1280-300x300.jpg'),
+                    //   radius: 30,
+                    // ),
                   ]),
             ),
             Builder(
@@ -138,11 +167,39 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     //tambah gambar dari user
-                    CircleAvatar(
-                      backgroundColor: Colors.green,
-                      backgroundImage: AssetImage('Asset/profil.png'),
-                      radius: 35,
+                    Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image(
+                          fit: BoxFit.cover,
+                          image: NetworkImage('$imageurl'),
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              child: Icon(
+                                Icons.error_outline,
+                                color: Colors.green,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
+                    // CircleAvatar(
+                    //   backgroundColor: Colors.green,
+                    //   backgroundImage: AssetImage('Asset/profil.png'),
+                    //   radius: 35,
+                    // ),
                     Container(
                         height: 80,
                         width: 200,
@@ -191,7 +248,11 @@ class _HomeState extends State<Home> {
                               color: Colors.black,
                               fontSize: 14,
                               fontWeight: FontWeight.w700))),
-                  onTap: () async {}),
+                  onTap: () {
+                    Navigator.pop(context);
+                    PersistentNavBarNavigator.pushNewScreen(context,
+                        screen: editprofil(), withNavBar: false);
+                  }),
               ListTile(
                 leading: Icon(CupertinoIcons.bell_solid),
                 iconColor: Colors.black,
@@ -202,7 +263,11 @@ class _HomeState extends State<Home> {
                             color: Colors.black,
                             fontSize: 14,
                             fontWeight: FontWeight.w700))),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  PersistentNavBarNavigator.pushNewScreen(context,
+                      screen: notifikasipage(), withNavBar: false);
+                },
               ),
               ListTile(
                 leading: Icon(CupertinoIcons.phone_solid),
@@ -214,7 +279,11 @@ class _HomeState extends State<Home> {
                             color: Colors.black,
                             fontSize: 14,
                             fontWeight: FontWeight.w700))),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  PersistentNavBarNavigator.pushNewScreen(context,
+                      screen: nomorindihone(), withNavBar: false);
+                },
               ),
               ListTile(
                 leading: Icon(CupertinoIcons.square_arrow_right_fill),
@@ -311,17 +380,19 @@ class _HomeState extends State<Home> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w600))),
-                                                RichText(
-                                                    text: TextSpan(
-                                                        text: 'BC-001',
-                                                        style:
-                                                            GoogleFonts.roboto(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 13,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500))),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    _uidpelanggan();
+                                                  },
+                                                  child: Text(
+                                                    'Lihat User ID',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                                  ),
+                                                )
                                               ],
                                             )
                                           ],
@@ -466,7 +537,9 @@ class _HomeState extends State<Home> {
                                                   height: 5,
                                                 ),
                                                 GestureDetector(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    profilberubah();
+                                                  },
                                                   child: Row(
                                                     children: [
                                                       RichText(
@@ -606,13 +679,18 @@ class _HomeState extends State<Home> {
                                       ),
                                       //menu other
                                       GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          PersistentNavBarNavigator
+                                              .pushNewScreen(context,
+                                                  screen: ewalletpage(),
+                                                  withNavBar: false);
+                                        },
                                         child: Column(
                                           children: [
                                             Image.asset('Asset/other_icon.png'),
                                             RichText(
                                                 text: TextSpan(
-                                                    text: 'Other',
+                                                    text: 'E-Wallet',
                                                     style: GoogleFonts.roboto(
                                                         color: Colors.black,
                                                         fontSize: 13,
@@ -802,7 +880,7 @@ class _HomeState extends State<Home> {
 
   void profilberubah() {
     profil.child('/pelanggan/bottlecash/$cekUid/').onValue.listen((event) {
-      //print(event.snapshot.value.toString());
+      print(event.snapshot.value.toString());
       Map profiluser = event.snapshot.value as Map;
       profiluser.forEach((key, value) {
         setState(() {
@@ -813,6 +891,7 @@ class _HomeState extends State<Home> {
           botoluser = profiluser['botol'];
           tutupuser = profiluser['tutupbotol'];
           laberuser = profiluser['labelbotol'];
+          imageurl = profiluser['profilURL'];
         });
       });
     });
@@ -822,5 +901,44 @@ class _HomeState extends State<Home> {
     try {
       await FirebaseAuth.instance.signOut();
     } catch (e) {}
+  }
+
+  Future<void> _uidpelanggan() async {
+    final TextEditingController _koinbaru = new TextEditingController();
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('User ID Kamu'),
+                SizedBox(
+                  height: 10,
+                ),
+                Text('$cekUid')
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Center(
+                  child: TextButton(
+                    child: const Text('Tutup'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                )
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 }

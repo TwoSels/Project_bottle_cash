@@ -1,16 +1,20 @@
 import 'dart:ffi';
 import 'dart:math';
+import 'dart:io';
 import 'package:checkbox_formfield/checkbox_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'LoginPage.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:bottle_cash_deployment_app/Service_auth/auth_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class RegisPage extends StatefulWidget {
   RegisPage({Key? key}) : super(key: key);
@@ -24,6 +28,7 @@ class _RegisPageState extends State<RegisPage> {
   final _formKey = GlobalKey<FormState>();
   bool? checkboxIconFormFieldValue = false;
   bool showErrorMessage = false;
+  FirebaseStorage storage = FirebaseStorage.instance;
   FirebaseDatabase database = FirebaseDatabase.instance;
   late DatabaseReference dbref =
       FirebaseDatabase.instance.ref('pelanggan/bottlecash');
@@ -33,9 +38,12 @@ class _RegisPageState extends State<RegisPage> {
   final TextEditingController _emailController = new TextEditingController();
   final TextEditingController _passController = new TextEditingController();
   final TextEditingController _phoneController = new TextEditingController();
-  void id() {
-    int nomor = 0;
-    nomor = nomor + 1;
+
+  int id = 1;
+  void autoincrement() {
+    setState(() {
+      id++;
+    });
   }
 
   //late bool _passwordVisible;
@@ -43,6 +51,7 @@ class _RegisPageState extends State<RegisPage> {
   static final RegExp numberRegExp = RegExp(r'[a-zA-Z]');
   final String spasi = " ";
 
+  @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
@@ -396,18 +405,21 @@ class _RegisPageState extends State<RegisPage> {
   }
 
   void _submit() async {
-    int id = 1;
-    int increment;
-    increment = id++;
-    var counter = 0;
-    do {
-      counter + 1;
-    } while (counter == 1);
-    String koin = "0";
+    Reference image = FirebaseStorage.instance
+        .ref()
+        .child('images/blank-profile-picture-973460_1280-300x300.jpg');
+    String imageUrl = await image.getDownloadURL();
+    final Email email = Email(
+      body: 'ini body',
+      recipients: [_emailController.text],
+      subject: 'ini subject',
+    );
+    String koin = "5000";
     String botol = "0";
     String tutupbotol = "0";
     String labelbotol = "0";
     String tukar = " ";
+    String nmrIndihome = "xxxx-xxxx-xxxx";
 
     final ProgressDialog pr = ProgressDialog(context);
     pr.style(
@@ -443,13 +455,16 @@ class _RegisPageState extends State<RegisPage> {
             'saldo': koin,
             'uid': uid,
             'botol': botol,
+            'profilURL': imageUrl,
             'tutupbotol': tutupbotol,
             'labelbotol': labelbotol,
-            'tukar': tukar
+            'tukar': tukar,
+            'nomor indihome': nmrIndihome,
           };
           dbref.child('/$uid').set(pelanggan);
           await pr.show();
           Fluttertoast.showToast(msg: "Berhasil daftar");
+
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => LoginPage()));
         } else {

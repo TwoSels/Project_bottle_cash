@@ -39,9 +39,10 @@ class _LoginPageState extends State<LoginPage> {
   Box? box1;
 
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = new TextEditingController();
-  final TextEditingController _passController = new TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passController = TextEditingController();
   final _userProfil = Hive.box('userProfil');
+
   @override
   void initState() {
     _passwordVisible = false;
@@ -61,21 +62,21 @@ class _LoginPageState extends State<LoginPage> {
     if (box1?.get('email') != null) {
       email.text = box1?.get('email');
       IsChecked = true;
-      setState(() {});
+      if (mounted) setState(() {});
     }
     if (box1?.get('email') != null) {
       pass.text = box1?.get('pass');
       IsChecked = true;
-      setState(() {});
+      if (mounted) setState(() {});
     }
   }
 
-  void dispose() {
-    email.dispose();
-    pass.dispose();
-
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   email.dispose();
+  //   pass.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -185,14 +186,16 @@ class _LoginPageState extends State<LoginPage> {
                                                 BorderRadius.circular(5)),
                                         suffixIcon: GestureDetector(
                                           onTap: () {
-                                            setState(() {
-                                              _passwordVisible = true;
-                                            });
+                                            if (mounted)
+                                              setState(() {
+                                                _passwordVisible = true;
+                                              });
                                           },
                                           onTapCancel: () {
-                                            setState(() {
-                                              _passwordVisible = false;
-                                            });
+                                            if (mounted)
+                                              setState(() {
+                                                _passwordVisible = false;
+                                              });
                                           },
                                           child: Icon(_passwordVisible
                                               ? Icons.visibility
@@ -232,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
                                   value: IsChecked,
                                   onChanged: ((value) {
                                     IsChecked = !IsChecked;
-                                    setState(() {});
+                                    if (mounted) setState(() {});
                                   })),
                               RichText(
                                   text: TextSpan(
@@ -268,12 +271,6 @@ class _LoginPageState extends State<LoginPage> {
                             child: ElevatedButton(
                               onPressed: () async {
                                 _submit();
-                                // final isValidForm =
-                                //     _formKey.currentState?.validate();
-
-                                // if (isValidForm){
-
-                                // }
                               },
                               child: const Text('LOGIN'),
                               style: ElevatedButton.styleFrom(
@@ -284,66 +281,6 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Colors.white)),
                             ),
                           ),
-
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     login();
-                          //     Navigator.push(
-                          //         context,
-                          //         MaterialPageRoute(
-                          //             builder: (context) => Home()));
-                          //   },
-                          //   child: Container(
-                          //     height: 45,
-                          //     width: 300,
-                          //     padding: EdgeInsets.symmetric(vertical: 10),
-                          //     alignment: Alignment.center,
-                          //     decoration: BoxDecoration(
-                          //         borderRadius:
-                          //             BorderRadius.all(Radius.circular(11)),
-                          //         boxShadow: <BoxShadow>[
-                          //           BoxShadow(
-                          //             color: Colors.grey.shade200,
-                          //             offset: Offset(2, 4),
-                          //             blurRadius: 5,
-                          //             spreadRadius: 2,
-                          //           ),
-                          //         ],
-                          //         color: Color(0xFF8DC13F)),
-                          //     child: Text('LOGIN',
-                          //         style: GoogleFonts.roboto(
-                          //           fontSize: 20,
-                          //           fontWeight: FontWeight.bold,
-                          //           color: Colors.white,
-                          //         )),
-                          //   ),
-                          // ),
-
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     AuthService().signInwithGoogle();
-
-                          //     if (GoogleSignInAccount == null) {
-                          //       return;
-                          //     }
-                          //   },
-                          //   child: Container(
-                          //     height: 48,
-                          //     width: 200,
-                          //     child: Row(
-                          //       children: [
-                          //         Image(image: AssetImage("Asset/gugel.png")),
-                          //         RichText(
-                          //             text: TextSpan(
-                          //                 text: 'Login dengan Google',
-                          //                 style: GoogleFonts.roboto(
-                          //                     fontSize: 12,
-                          //                     fontWeight: FontWeight.w600,
-                          //                     color: Colors.black)))
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
                           SizedBox(
                             height: 10,
                           ),
@@ -397,17 +334,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  //fungsi validator email manual
-  // String? validateEmail(String? value) {
-  //   String pattern =
-  //       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  //   RegExp regex = RegExp(pattern);
-  //   if (!regex.hasMatch(value!))
-  //     return 'Masukkan Email';
-  //   else
-  //     return null;
-  // }
-
   void login() {
     if (IsChecked) {
       box1?.put('email', _emailController.text);
@@ -458,6 +384,8 @@ class _LoginPageState extends State<LoginPage> {
         //final data = await storage.getItem('UserData');
         //print(data);
         //print(userData.value);
+        getdata();
+        login();
         Fluttertoast.showToast(msg: "Berhasil Login");
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => Persistent_navbar()));

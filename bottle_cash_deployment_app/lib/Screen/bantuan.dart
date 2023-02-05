@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class halaman_bantuan extends StatefulWidget {
   halaman_bantuan({Key? key}) : super(key: key);
@@ -13,6 +14,16 @@ class _halaman_bantuanState extends State<halaman_bantuan> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFCCD640),
+        title: Center(
+          child: Text(
+            'Bantuan',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
+        ),
       ),
       body: Container(
         child: Column(

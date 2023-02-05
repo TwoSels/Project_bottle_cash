@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -298,7 +302,7 @@ class _AchievmentPageState extends State<AchievmentPage> {
               width: 125,
             ),
             Text(
-              'Achievment',
+              'Achievement',
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 fontWeight: FontWeight.w600,
@@ -345,6 +349,7 @@ class _AchievmentPageState extends State<AchievmentPage> {
 
                         if (image == null) return toast();
                         await saveImage(image);
+                        saveAndShare(image);
                         toast();
                       },
                       label: const Text(
@@ -390,6 +395,14 @@ class _AchievmentPageState extends State<AchievmentPage> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         fontSize: 14);
+  }
+
+  Future saveAndShare(Uint8List bytes) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final image = File('${directory.path}/Pencapaian Bottle Cash.png');
+    image.writeAsBytesSync(bytes);
+
+    await Share.shareFiles([image.path]);
   }
 
   void getprofil() {
