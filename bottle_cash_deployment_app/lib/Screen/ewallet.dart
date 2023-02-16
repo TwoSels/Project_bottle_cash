@@ -12,9 +12,11 @@ class ewalletpage extends StatefulWidget {
 }
 
 class _ewalletpageState extends State<ewalletpage> {
+  //widget utama
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //appbar
       appBar: AppBar(
         backgroundColor: Color(0xFFCCD640),
         iconTheme: IconThemeData(color: Colors.black),
@@ -28,6 +30,7 @@ class _ewalletpageState extends State<ewalletpage> {
             SizedBox(
               height: 40,
             ),
+            //button ke halaman penukaran linkaja
             GestureDetector(
               onTap: () {
                 Navigator.push(context,
@@ -69,6 +72,7 @@ class _ewalletpageState extends State<ewalletpage> {
             SizedBox(
               height: 14,
             ),
+            //button ke halaman penukaran gopay
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -110,6 +114,7 @@ class _ewalletpageState extends State<ewalletpage> {
             SizedBox(
               height: 14,
             ),
+            //button ke halaman penukaran ovo
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -157,6 +162,7 @@ class _ewalletpageState extends State<ewalletpage> {
             SizedBox(
               height: 14,
             ),
+            //button ke halaman penukaran dana
             GestureDetector(
               onTap: () {
                 Navigator.push(

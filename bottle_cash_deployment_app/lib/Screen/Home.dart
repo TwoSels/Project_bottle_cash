@@ -28,6 +28,7 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
+import 'package:share_plus/share_plus.dart';
 
 import '../Notifikasi/notifikasi.dart';
 
@@ -39,10 +40,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  //deklarasi variable global
   final FirebaseAuth auth = FirebaseAuth.instance;
   late User currentuser = auth.currentUser!;
   final LocalStorage storage = new LocalStorage('uid');
-  final _userProfil = Hive.box('userProfil');
   String uid = FirebaseAuth.instance.currentUser!.uid;
   String _name = "";
   final User user = FirebaseAuth.instance.currentUser!;
@@ -51,6 +52,7 @@ class _HomeState extends State<Home> {
   final foto = FirebaseDatabase.instance.ref('pelanggan/bottlecash');
   AuthService authService = AuthService();
 
+  //variabel pemanggilan untuk setiap data dari realtime database
   var nama;
   var emailuser;
   var nohpuser;
@@ -60,6 +62,7 @@ class _HomeState extends State<Home> {
   var tutupuser;
   var imageurl;
 
+  //fungsi agar menjalankan state secara otomatis
   @override
   void initState() {
     requestpermission();
@@ -67,9 +70,11 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
+  //widget utama
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        //appbar
         appBar: AppBar(
           backgroundColor: Color(0xFFCCD640),
           toolbarHeight: 82,
@@ -88,26 +93,18 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-                // Align(
-                //   alignment: Alignment.centerLeft,
-                //   child: Image.asset('Asset/telkom.png'),
-                // )
               ],
             ),
           ),
+          //foto profil di appbar
           actions: [
             Align(
               alignment: Alignment.centerLeft,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  //widget untuk menampilkan imageurl dari user
                   children: <Widget>[
-                    // ProfilePicture(
-                    //   name: 'Anya',
-                    //   radius: 29,
-                    //   fontsize: 21,
-                    //   random: true,
-                    // ),
                     Container(
                       height: 60,
                       width: 60,
@@ -136,15 +133,9 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-
-                    // CircleAvatar(
-                    //   backgroundColor: Colors.grey,
-                    //   backgroundImage: NetworkImage(
-                    //       'https://www.its.ac.id/international/wp-content/uploads/sites/66/2020/02/blank-profile-picture-973460_1280-300x300.jpg'),
-                    //   radius: 30,
-                    // ),
                   ]),
             ),
+            //button untuk menampilkan drawer
             Builder(
               builder: (context) => IconButton(
                 icon: Icon(CupertinoIcons.ellipsis_vertical),
@@ -195,11 +186,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-                    // CircleAvatar(
-                    //   backgroundColor: Colors.green,
-                    //   backgroundImage: AssetImage('Asset/profil.png'),
-                    //   radius: 35,
-                    // ),
+                    //menampilkan user info dari database
                     Container(
                         height: 80,
                         width: 200,
@@ -238,6 +225,7 @@ class _HomeState extends State<Home> {
                   ],
                 )),
               ),
+              //listtile button
               ListTile(
                   leading: Icon(CupertinoIcons.square_pencil),
                   iconColor: Colors.black,
@@ -299,7 +287,7 @@ class _HomeState extends State<Home> {
                   // AuthService().signOutFromGoogle();
                   logout();
                   storage.clear();
-                  _userProfil.delete(1);
+
                   Fluttertoast.showToast(msg: "Berhasil Keluar");
                   PersistentNavBarNavigator.pushNewScreen(context,
                       screen: LoginPage(), withNavBar: false);
@@ -311,6 +299,7 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
+        //isi utama
         body: DoubleBackToCloseApp(
           snackBar: const SnackBar(
               content: Text('Tekan Sekali lagi untuk menutup aplikasi')),
@@ -538,7 +527,7 @@ class _HomeState extends State<Home> {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () {
-                                                    profilberubah();
+                                                    share();
                                                   },
                                                   child: Row(
                                                     children: [
@@ -572,6 +561,7 @@ class _HomeState extends State<Home> {
                                     ],
                                   ),
                                 ),
+                                // menu tukar bcash
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Column(
@@ -593,7 +583,7 @@ class _HomeState extends State<Home> {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                //menu row
+                                //container menu row
                                 Container(
                                   height: 94,
                                   width: 330,
@@ -677,7 +667,7 @@ class _HomeState extends State<Home> {
                                           ],
                                         ),
                                       ),
-                                      //menu other
+                                      //menu other/ewallet
                                       GestureDetector(
                                         onTap: () {
                                           PersistentNavBarNavigator
@@ -744,6 +734,7 @@ class _HomeState extends State<Home> {
                                 SizedBox(
                                   height: 30,
                                 ),
+                                //item per row
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -878,6 +869,7 @@ class _HomeState extends State<Home> {
         ));
   }
 
+  //fungsi pemanggilan data setiap user sesuai dari uid di database
   void profilberubah() {
     profil.child('/pelanggan/bottlecash/$cekUid/').onValue.listen((event) {
       print(event.snapshot.value.toString());
@@ -897,12 +889,23 @@ class _HomeState extends State<Home> {
     });
   }
 
+  //fungsi keluar aplikasi
   void logout() async {
     try {
       await FirebaseAuth.instance.signOut();
     } catch (e) {}
   }
 
+  void share() {
+    Share.share(
+        'Ayok jadi B-CASH RANGER dengan download aplikasi BOTTLECASH: https://play.google.com/store/apps/details?id=com.project.bottlecashapp&pli=1');
+  }
+
+  void shareuid() {
+    Share.share('Kode akun unik kamu $cekUid');
+  }
+
+  //fungsi penampilah uid pelanggan
   Future<void> _uidpelanggan() async {
     final TextEditingController _koinbaru = new TextEditingController();
 
@@ -926,14 +929,19 @@ class _HomeState extends State<Home> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Center(
-                  child: TextButton(
-                    child: const Text('Tutup'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                )
+                TextButton(
+                  child: const Text('Share'),
+                  onPressed: () {
+                    shareuid();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Tutup'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
               ],
             ),
           ],

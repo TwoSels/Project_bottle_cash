@@ -1,5 +1,6 @@
 import 'package:admin_bottle_cash_app/Screen/Penukaran.dart';
 import 'package:admin_bottle_cash_app/Screen/login_page.dart';
+import 'package:admin_bottle_cash_app/Screen/penyimpanan.dart';
 import 'package:admin_bottle_cash_app/Screen/reset_bcash.dart';
 import 'package:admin_bottle_cash_app/Screen/reset_kodegembok.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -80,7 +81,7 @@ class _homeState extends State<home> {
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   // SizedBox(
                   //   height: 50,
@@ -102,7 +103,22 @@ class _homeState extends State<home> {
                     height: 50,
                     width: 200,
                     child: ElevatedButton(
-                      onPressed: () async {
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => penyimpanan()));
+                        },
+                        child: Text('Penyimpanan')),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(

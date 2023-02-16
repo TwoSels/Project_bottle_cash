@@ -15,6 +15,7 @@ class linkaja extends StatefulWidget {
 }
 
 class _linkajaState extends State<linkaja> {
+  //deklarasi variable global
   final _formKey = GlobalKey<FormState>();
   final String huruf = "[a-z],[A-Z]";
   final database = FirebaseDatabase.instance.ref();
@@ -22,12 +23,11 @@ class _linkajaState extends State<linkaja> {
   DatabaseReference saldo = FirebaseDatabase.instance.ref();
   String uid = FirebaseAuth.instance.currentUser!.uid;
   TextEditingController bcash = TextEditingController();
-
   TextEditingController nomor = TextEditingController();
-
+  //variabel untuk memasukkan data dari database
   var saldouser;
   var ceksaldo;
-
+  //fungsi untuk state berjalan otomatis
   @override
   void initState() {
     super.initState();
@@ -36,6 +36,7 @@ class _linkajaState extends State<linkaja> {
     if (mounted) setState(() {});
   }
 
+  //fungsi push notification ke aplikasi admin
   void _incrementCounter() {
     if (mounted)
       setState(() {
@@ -50,7 +51,7 @@ class _linkajaState extends State<linkaja> {
   //   nomor.dispose();
   //   super.dispose();
   // }
-
+  //widget utama
   @override
   Widget build(BuildContext context) {
     final tukar = database.child('pelanggan/bottlecash/$uid/');
@@ -87,6 +88,7 @@ class _linkajaState extends State<linkaja> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //tittle
                         RichText(
                             text: TextSpan(
                                 text: 'Nomor LinkAja',
@@ -97,6 +99,7 @@ class _linkajaState extends State<linkaja> {
                         SizedBox(
                           height: 10,
                         ),
+                        //textfiel input nomor user
                         TextFormField(
                           obscureText: false,
                           keyboardType: TextInputType.number,
@@ -120,6 +123,7 @@ class _linkajaState extends State<linkaja> {
                         SizedBox(
                           height: 20,
                         ),
+                        //tittle
                         RichText(
                             text: TextSpan(
                                 text: 'Input Nominal B-Cash',
@@ -130,6 +134,7 @@ class _linkajaState extends State<linkaja> {
                         SizedBox(
                           height: 10,
                         ),
+                        //textfield input nominal bcash
                         TextFormField(
                           obscureText: false,
                           controller: bcash,
@@ -155,6 +160,7 @@ class _linkajaState extends State<linkaja> {
                         SizedBox(
                           height: 20,
                         ),
+                        //button tukar bcash
                         Align(
                           alignment: Alignment.center,
                           child: SizedBox(
@@ -162,10 +168,13 @@ class _linkajaState extends State<linkaja> {
                             width: 150,
                             child: ElevatedButton(
                               onPressed: () async {
+                                var nouser = nomor.text;
                                 var saldo = bcash.text;
                                 var jumlahtransaksi = int.parse(saldo);
                                 ceksaldo = int.parse(saldouser);
+                                //pengecekan kondisi textfield
                                 if (_formKey.currentState!.validate()) {
+                                  //pengecekan kondisi ketika saldo kurang dan memenuhi
                                   if (ceksaldo < jumlahtransaksi) {
                                     Fluttertoast.showToast(
                                         msg: 'Saldo kamu kurang');
@@ -178,20 +187,22 @@ class _linkajaState extends State<linkaja> {
                                         msg: 'traksansi berhasil dilakukan');
                                     _incrementCounter();
                                     await tukar.update({
-                                      'tukar': '$saldo penukaran Saldo LinkAja'
+                                      'tukar':
+                                          '$saldo penukaran Saldo LinkAja ke $nouser'
                                     });
                                     await tukar
                                         .child('history penukaran')
                                         .push()
                                         .set({
-                                      'tukar': '$saldo penukaran Saldo LinkAja'
+                                      'tukar':
+                                          '$saldo penukaran Saldo LinkAja ke $nouser'
                                     });
                                     await tukar
                                         .child('transaksi ewallet')
                                         .push()
                                         .set({
                                       'ewallet': 'LinkAja',
-                                      'nomor': nomor.text,
+                                      'nomor': nouser,
                                       'transaksi': saldo,
                                     });
                                     Navigator.pop(context);
@@ -218,6 +229,7 @@ class _linkajaState extends State<linkaja> {
         ));
   }
 
+  //fungsi mendapatkan data saldo dari database
   void getprofil() {
     saldo.child('/pelanggan/bottlecash/$uid/').onValue.listen((event) {
       print(event.snapshot.value.toString());
@@ -231,6 +243,7 @@ class _linkajaState extends State<linkaja> {
     });
   }
 
+  //fungsi saldo memenuhi
   void saldomemenuhi(int jumlahtransaksi) async {
     final tukar = database.child('pelanggan/bottlecash/$uid/');
     ceksaldo = int.parse(saldouser);

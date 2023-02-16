@@ -16,18 +16,20 @@ class SODPage extends StatefulWidget {
 }
 
 class _SODPageState extends State<SODPage> {
-  int? paketSOD;
+  //deklarasi variable global
   final database = FirebaseDatabase.instance.ref();
   String uid = FirebaseAuth.instance.currentUser!.uid;
   DatabaseReference saldo = FirebaseDatabase.instance.ref();
-
+  //deklarasi untuk groupvalue
+  int? paketSOD;
+  //deklarasi untuk harga
   int paket1day30mbps = 40000;
   int paket1day40mbps = 74000;
   int paket7day30mbps = 260000;
-
+  //variable untuk dimasukkan data dari database
   var saldouser;
   var ceksaldo;
-
+  //fungsi agar state berjalan otomatis
   @override
   void initState() {
     getprofil();
@@ -35,6 +37,7 @@ class _SODPageState extends State<SODPage> {
     super.initState();
   }
 
+  //fungsi push notification ke aplikasi admin
   void _incrementCounter() {
     setState(() {
       callOnFcmApiSendPushNotifications(
@@ -43,10 +46,13 @@ class _SODPageState extends State<SODPage> {
     });
   }
 
+  //widget utama
   @override
   Widget build(BuildContext context) {
+    //deklarasi child database
     final tukar = database.child('pelanggan/bottlecash/$uid/');
     return Scaffold(
+        //appbar
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.grey),
           backgroundColor: Color(0xFFCCD640),
@@ -74,6 +80,7 @@ class _SODPageState extends State<SODPage> {
                 // ),
                 child: Column(
                   children: [
+                    //tittle
                     RichText(
                         text: TextSpan(
                             text: 'Paket Harga Speed On Demand',
@@ -86,6 +93,7 @@ class _SODPageState extends State<SODPage> {
                         SizedBox(
                           width: 10,
                         ),
+                        //radio button pilihan 1
                         Radio(
                             value: paket1day30mbps,
                             groupValue: paketSOD,
@@ -106,6 +114,7 @@ class _SODPageState extends State<SODPage> {
                         SizedBox(
                           width: 10,
                         ),
+                        //radio button pilihan 2
                         Radio(
                             value: paket1day40mbps,
                             groupValue: paketSOD,
@@ -126,6 +135,7 @@ class _SODPageState extends State<SODPage> {
                         SizedBox(
                           width: 10,
                         ),
+                        //radio button pilihan 3
                         Radio(
                             value: paket7day30mbps,
                             groupValue: paketSOD,
@@ -144,6 +154,7 @@ class _SODPageState extends State<SODPage> {
                     SizedBox(
                       height: 30,
                     ),
+                    //button untuk tukarbcash
                     SizedBox(
                       height: 45,
                       width: 150,
@@ -152,6 +163,7 @@ class _SODPageState extends State<SODPage> {
                           var jumlahtransaksi;
                           ceksaldo = int.parse(saldouser);
                           jumlahtransaksi = paketSOD;
+                          //pengecekan kondisi saldo memenuhhi dan tidak terpenuhi
                           if (ceksaldo < paketSOD) {
                             Fluttertoast.showToast(msg: 'Saldo kamu kurang');
                           } else {
@@ -204,6 +216,7 @@ class _SODPageState extends State<SODPage> {
         ));
   }
 
+  //fungsi untuk mengambil data saldo dari databse
   void getprofil() {
     saldo.child('/pelanggan/bottlecash/$uid/').onValue.listen((event) {
       print(event.snapshot.value.toString());

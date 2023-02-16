@@ -15,6 +15,7 @@ class ovo extends StatefulWidget {
 }
 
 class _ovoState extends State<ovo> {
+  //deklarasi variable global
   final _formKey = GlobalKey<FormState>();
   final String huruf = "[a-z],[A-Z]";
   final database = FirebaseDatabase.instance.ref();
@@ -22,12 +23,11 @@ class _ovoState extends State<ovo> {
   DatabaseReference saldo = FirebaseDatabase.instance.ref();
   String uid = FirebaseAuth.instance.currentUser!.uid;
   TextEditingController bcash = TextEditingController();
-
   TextEditingController nomor = TextEditingController();
-
+  //variabel untuk dimasukkan data dari databse
   var saldouser;
   var ceksaldo;
-
+  //fungsi untuk menjalankan state otomatis
   @override
   void initState() {
     super.initState();
@@ -36,6 +36,7 @@ class _ovoState extends State<ovo> {
     if (mounted) setState(() {});
   }
 
+  //fungsi push notification ke aplikasi admin
   void _incrementCounter() {
     if (mounted)
       setState(() {
@@ -45,6 +46,7 @@ class _ovoState extends State<ovo> {
       });
   }
 
+  //widget utama
   @override
   Widget build(BuildContext context) {
     final tukar = database.child('pelanggan/bottlecash/$uid/');
@@ -81,6 +83,7 @@ class _ovoState extends State<ovo> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //tittle
                         RichText(
                             text: TextSpan(
                                 text: 'Nomor OVO',
@@ -91,6 +94,7 @@ class _ovoState extends State<ovo> {
                         SizedBox(
                           height: 10,
                         ),
+                        //textfield input nomor
                         TextFormField(
                           obscureText: false,
                           keyboardType: TextInputType.number,
@@ -114,6 +118,7 @@ class _ovoState extends State<ovo> {
                         SizedBox(
                           height: 20,
                         ),
+                        //tittle
                         RichText(
                             text: TextSpan(
                                 text: 'Input Nominal B-Cash',
@@ -124,6 +129,7 @@ class _ovoState extends State<ovo> {
                         SizedBox(
                           height: 10,
                         ),
+                        //textfield input nominal bcash
                         TextFormField(
                           obscureText: false,
                           controller: bcash,
@@ -156,10 +162,13 @@ class _ovoState extends State<ovo> {
                             width: 150,
                             child: ElevatedButton(
                               onPressed: () async {
+                                var nouser = nomor.text;
                                 var saldo = bcash.text;
                                 var jumlahtransaksi = int.parse(saldo);
                                 ceksaldo = int.parse(saldouser);
+                                //pengecekan kondisi textfield
                                 if (_formKey.currentState!.validate()) {
+                                  //pengecekan kondisi ketika saldo kurang dan memenuhi
                                   if (ceksaldo < jumlahtransaksi) {
                                     Fluttertoast.showToast(
                                         msg: 'Saldo kamu kurang');
@@ -172,20 +181,22 @@ class _ovoState extends State<ovo> {
                                         msg: 'traksansi berhasil dilakukan');
                                     _incrementCounter();
                                     await tukar.update({
-                                      'tukar': '$saldo penukaran Saldo OVO'
+                                      'tukar':
+                                          '$saldo penukaran Saldo OVO ke $nouser'
                                     });
                                     await tukar
                                         .child('history penukaran')
                                         .push()
                                         .set({
-                                      'tukar': '$saldo penukaran Saldo OVO'
+                                      'tukar':
+                                          '$saldo penukaran Saldo OVO ke $nouser'
                                     });
                                     await tukar
                                         .child('transaksi ewallet')
                                         .push()
                                         .set({
                                       'ewallet': 'OVO',
-                                      'nomor': nomor.text,
+                                      'nomor': nouser,
                                       'transaksi': saldo,
                                     });
                                     Navigator.pop(context);
@@ -212,6 +223,7 @@ class _ovoState extends State<ovo> {
         ));
   }
 
+  //fungsi mendapatkan data saldo dari database
   void getprofil() {
     saldo.child('/pelanggan/bottlecash/$uid/').onValue.listen((event) {
       print(event.snapshot.value.toString());

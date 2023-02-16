@@ -23,6 +23,7 @@ class TagihanIndohome extends StatefulWidget {
 }
 
 class _TagihanIndohomeState extends State<TagihanIndohome> {
+  //deklarasi variable global
   final _formKey = GlobalKey<FormState>();
   final String huruf = "[a-z],[A-Z]";
   final String spasi = " ";
@@ -35,9 +36,11 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
 
   TextEditingController nomor = TextEditingController();
 
+  //variabel untuk pemanggilan data user
   var saldouser;
   var ceksaldo;
 
+  //fungi agar state berjalan otomatis
   @override
   void initState() {
     super.initState();
@@ -46,6 +49,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
     if (mounted) setState(() {});
   }
 
+  //fungsi push notification ke aplikasi admin
   void _incrementCounter() {
     if (mounted)
       setState(() {
@@ -61,10 +65,13 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
   //   super.dispose();
   // }
 
+  //widget utama
   @override
   Widget build(BuildContext context) {
+    //deklarasi child database
     final tukar = database.child('pelanggan/bottlecash/$uid/');
     return Scaffold(
+        //appbar
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.grey),
           backgroundColor: Color(0xFFCCD640),
@@ -97,6 +104,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //title
                         RichText(
                             text: TextSpan(
                                 text: 'Nomor Indihome',
@@ -107,6 +115,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                         SizedBox(
                           height: 10,
                         ),
+                        //textfield untuk input nomor indihome pelanggan
                         TextFormField(
                           obscureText: false,
                           controller: nomor,
@@ -130,6 +139,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                         SizedBox(
                           height: 20,
                         ),
+                        //tittle
                         RichText(
                             text: TextSpan(
                                 text: 'Input Nominal B-Cash',
@@ -140,6 +150,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                         SizedBox(
                           height: 10,
                         ),
+                        //textfield untuk input saldo
                         TextFormField(
                           obscureText: false,
                           controller: bcash,
@@ -165,6 +176,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                         SizedBox(
                           height: 20,
                         ),
+                        //button untuk tukar saldo
                         Align(
                           alignment: Alignment.center,
                           child: SizedBox(
@@ -172,10 +184,15 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                             width: 150,
                             child: ElevatedButton(
                               onPressed: () async {
+                                var nouser = nomor.text;
+                                //variable untuk memasukkan data dari database
                                 var saldo = bcash.text;
                                 var jumlahtransaksi = int.parse(saldo);
+                                //parsing dari string ke integer
                                 ceksaldo = int.parse(saldouser);
+                                //fungsi pengecekan textfield
                                 if (_formKey.currentState!.validate()) {
+                                  //fungsi pengecekan saldo ketika tidak cukup dan ketika cukup
                                   if (ceksaldo < jumlahtransaksi) {
                                     Fluttertoast.showToast(
                                         msg: 'saldo tak cukup');
@@ -189,31 +206,25 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                                     _incrementCounter();
                                     await tukar.update({
                                       'tukar':
-                                          '$saldo penukaran tagihan indihome'
+                                          '$saldo penukaran tagihan indihome ke nomor $nouser'
                                     });
                                     await tukar
                                         .child('history penukaran')
                                         .push()
                                         .set({
                                       'tukar':
-                                          '$saldo penukaran tagihan indihome'
+                                          '$saldo penukaran tagihan indihome ke nomor $nouser'
                                     });
                                     await tukar
                                         .child('transaksi indihome')
                                         .push()
                                         .set({
-                                      'nomor': nomor.text,
+                                      'nomor': nomor,
                                       'transaksi': saldo,
                                     });
                                     Navigator.pop(context);
                                   }
                                 }
-                                // final isValidForm =
-                                //     _formKey.currentState?.validate();
-
-                                // if (isValidForm){
-
-                                // }
                               },
                               child: const Text('Tukar B-Cash'),
                               style: ElevatedButton.styleFrom(
@@ -228,6 +239,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                         SizedBox(
                           height: 30,
                         ),
+                        //subtittle
                         Align(
                           alignment: Alignment.center,
                           child: Column(
@@ -242,6 +254,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                               SizedBox(
                                 height: 20,
                               ),
+                              //button untuk mengarahkan ke registrasi indihome ketika belum ada
                               Container(
                                 height: 45,
                                 width: 300,
@@ -261,11 +274,6 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
                                           color: Colors.white)),
                                 ),
                               ),
-                              // ElevatedButton(
-                              //     onPressed: () {
-                              //       saldomemenuhi();
-                              //     },
-                              //     child: Text('Test')),
                               SizedBox(
                                 height: 80,
                               ),
@@ -287,11 +295,13 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
         ));
   }
 
+  //fungsi untuk memasukkan url untuk dimasukkan kedalam button
   Future<void> openUrl(String url,
       {bool forceWebView = false, bool enableJavaScript = false}) async {
     await launch(url);
   }
 
+  //fungsi mengambil data saldo dari database
   void getprofil() {
     saldo.child('/pelanggan/bottlecash/$uid/').onValue.listen((event) {
       print(event.snapshot.value.toString());
@@ -305,6 +315,7 @@ class _TagihanIndohomeState extends State<TagihanIndohome> {
     });
   }
 
+  //fungsi ketika saldo memenuho
   void saldomemenuhi(int jumlahtransaksi) async {
     final tukar = database.child('pelanggan/bottlecash/$uid/');
     ceksaldo = int.parse(saldouser);

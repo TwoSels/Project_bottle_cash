@@ -15,6 +15,7 @@ class gopay extends StatefulWidget {
 }
 
 class _gopayState extends State<gopay> {
+  //deklarasi variable global
   final _formKey = GlobalKey<FormState>();
   final String huruf = "[a-z],[A-Z]";
   final database = FirebaseDatabase.instance.ref();
@@ -23,10 +24,10 @@ class _gopayState extends State<gopay> {
   String uid = FirebaseAuth.instance.currentUser!.uid;
   TextEditingController bcash = TextEditingController();
   TextEditingController nomor = TextEditingController();
-
+  //variabel untuk dimasukkan data dari database
   var saldouser;
   var ceksaldo;
-
+  //fungsi untuk menjalankan state secara otomatis
   @override
   void initState() {
     super.initState();
@@ -35,6 +36,7 @@ class _gopayState extends State<gopay> {
     if (mounted) setState(() {});
   }
 
+  //fungsi push notification ke aplikasi admin
   void _incrementCounter() {
     if (mounted)
       setState(() {
@@ -44,8 +46,10 @@ class _gopayState extends State<gopay> {
       });
   }
 
+  //widget utama
   @override
   Widget build(BuildContext context) {
+    //deklarasi child database
     final tukar = database.child('pelanggan/bottlecash/$uid/');
     return Scaffold(
         appBar: AppBar(
@@ -80,6 +84,7 @@ class _gopayState extends State<gopay> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //tittle
                         RichText(
                             text: TextSpan(
                                 text: 'Nomor Gopay',
@@ -90,6 +95,7 @@ class _gopayState extends State<gopay> {
                         SizedBox(
                           height: 10,
                         ),
+                        //textfield untuk input nomor
                         TextFormField(
                           obscureText: false,
                           keyboardType: TextInputType.number,
@@ -113,6 +119,7 @@ class _gopayState extends State<gopay> {
                         SizedBox(
                           height: 20,
                         ),
+                        //tittle
                         RichText(
                             text: TextSpan(
                                 text: 'Input Nominal B-Cash',
@@ -123,6 +130,7 @@ class _gopayState extends State<gopay> {
                         SizedBox(
                           height: 10,
                         ),
+                        //textfield untuk input nominal bcash
                         TextFormField(
                           obscureText: false,
                           controller: bcash,
@@ -148,6 +156,7 @@ class _gopayState extends State<gopay> {
                         SizedBox(
                           height: 20,
                         ),
+                        //button tukar bcash
                         Align(
                           alignment: Alignment.center,
                           child: SizedBox(
@@ -155,10 +164,13 @@ class _gopayState extends State<gopay> {
                             width: 150,
                             child: ElevatedButton(
                               onPressed: () async {
+                                var nouser = nomor.text;
                                 var saldo = bcash.text;
                                 var jumlahtransaksi = int.parse(saldo);
                                 ceksaldo = int.parse(saldouser);
+                                //pengecekan kondisi textfield
                                 if (_formKey.currentState!.validate()) {
+                                  //pengecekan kondisi ketika saldo kurang dan saldo memenuhi
                                   if (ceksaldo < jumlahtransaksi) {
                                     Fluttertoast.showToast(
                                         msg: 'Saldo kamu kurang');
@@ -171,20 +183,22 @@ class _gopayState extends State<gopay> {
                                         msg: 'traksansi berhasil dilakukan');
                                     _incrementCounter();
                                     await tukar.update({
-                                      'tukar': '$saldo penukaran Saldo Gopay'
+                                      'tukar':
+                                          '$saldo penukaran Saldo Gopay ke $nouser'
                                     });
                                     await tukar
                                         .child('history penukaran')
                                         .push()
                                         .set({
-                                      'tukar': '$saldo penukaran Saldo Gopay'
+                                      'tukar':
+                                          '$saldo penukaran Saldo Gopay ke $nouser'
                                     });
                                     await tukar
                                         .child('transaksi ewallet')
                                         .push()
                                         .set({
                                       'ewallet': 'Gopay',
-                                      'nomor': nomor.text,
+                                      'nomor': nouser,
                                       'transaksi': saldo,
                                     });
                                     Navigator.pop(context);
@@ -211,6 +225,7 @@ class _gopayState extends State<gopay> {
         ));
   }
 
+  //fungsi mendapatkan data saldo dari database
   void getprofil() {
     saldo.child('/pelanggan/bottlecash/$uid/').onValue.listen((event) {
       print(event.snapshot.value.toString());

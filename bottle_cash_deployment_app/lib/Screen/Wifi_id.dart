@@ -15,22 +15,27 @@ class Wifi_id extends StatefulWidget {
 }
 
 class _Wifi_idState extends State<Wifi_id> {
+  //deklarasi variable global
   final database = FirebaseDatabase.instance.ref();
   String uid = FirebaseAuth.instance.currentUser!.uid;
   var pilihan1;
   DatabaseReference saldo = FirebaseDatabase.instance.ref();
 
+  //variabel untuk memasukkan data dari database
   var saldouser;
   var ceksaldo;
   var jumlah;
 
+  //deklarasi int untuk harga setiap radio button
   int paket12jam = 5000;
   int paket7hari = 20000;
   int paket30jam = 50000;
 
+  //deklarasi groupvalue
   String? paketWifi_id;
   int? hargawifi_id;
 
+  //fungsi agar state berjalan otomatis
   @override
   void initState() {
     getprofil();
@@ -38,6 +43,7 @@ class _Wifi_idState extends State<Wifi_id> {
     super.initState();
   }
 
+  //fungsi push notification untuk ke aplikasi admin
   void _incrementCounter() {
     if (mounted)
       setState(() {
@@ -47,10 +53,13 @@ class _Wifi_idState extends State<Wifi_id> {
       });
   }
 
+  //widget utama
   @override
   Widget build(BuildContext context) {
+    //deklarasi child database
     final tukar = database.child('pelanggan/bottlecash/$uid/');
     return Scaffold(
+        //appbar
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.grey),
           backgroundColor: Color(0xFFCCD640),
@@ -68,6 +77,7 @@ class _Wifi_idState extends State<Wifi_id> {
             SizedBox(
               height: 30,
             ),
+            //isi container
             Align(
               alignment: Alignment.center,
               child: Container(
@@ -78,6 +88,7 @@ class _Wifi_idState extends State<Wifi_id> {
                 // ),
                 child: Column(
                   children: [
+                    //tittle
                     RichText(
                         text: TextSpan(
                             text: 'Paket Harga Voucher @wifi.id',
@@ -90,6 +101,7 @@ class _Wifi_idState extends State<Wifi_id> {
                         SizedBox(
                           width: 45,
                         ),
+                        //radio button pilihan 1
                         Radio(
                             value: paket12jam,
                             groupValue: hargawifi_id,
@@ -111,6 +123,7 @@ class _Wifi_idState extends State<Wifi_id> {
                         SizedBox(
                           width: 45,
                         ),
+                        //radio button pilihan 2
                         Radio(
                             value: paket7hari,
                             groupValue: hargawifi_id,
@@ -132,6 +145,7 @@ class _Wifi_idState extends State<Wifi_id> {
                         SizedBox(
                           width: 45,
                         ),
+                        //radio button pilihan 3
                         Radio(
                             value: paket30jam,
                             groupValue: hargawifi_id,
@@ -151,16 +165,18 @@ class _Wifi_idState extends State<Wifi_id> {
                     SizedBox(
                       height: 10,
                     ),
+                    //button penukaran
                     SizedBox(
                       height: 45,
                       width: 150,
                       child: ElevatedButton(
                         onPressed: () async {
-                          print(hargawifi_id);
-                          print(ceksaldo);
                           var jumlahtransaksi;
+                          //fungsi parsing string ke int
                           ceksaldo = int.parse(saldouser);
+                          //memasukkan isi hargawifi_id ke dalam var diatas
                           jumlahtransaksi = hargawifi_id;
+                          //fungsi cek saldo ketika cukup dan tidak cukup
                           if (ceksaldo < hargawifi_id) {
                             Fluttertoast.showToast(msg: 'Saldo kamu kurang');
                           } else {
@@ -213,6 +229,7 @@ class _Wifi_idState extends State<Wifi_id> {
         ));
   }
 
+  //fungsi mendapatkan isi saldo dari database
   void getprofil() {
     saldo.child('/pelanggan/bottlecash/$uid/').onValue.listen((event) {
       print(event.snapshot.value.toString());
@@ -226,6 +243,7 @@ class _Wifi_idState extends State<Wifi_id> {
     });
   }
 
+  //fungsi untuk saldo ketika terpenuhi
   void saldomemenuhi(int jumlahtransaksi) {
     ceksaldo = int.parse(saldouser);
     if (ceksaldo < jumlahtransaksi) {
