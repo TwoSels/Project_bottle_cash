@@ -51,14 +51,14 @@ class _RegisPageState extends State<RegisPage> {
   static final RegExp numberRegExp = RegExp(r'[a-zA-Z]');
   final String spasi = " ";
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _passController.dispose();
-    _passController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _nameController.dispose();
+  //   _emailController.dispose();
+  //   _passController.dispose();
+  //   _passController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   void iniState() {
@@ -158,7 +158,7 @@ class _RegisPageState extends State<RegisPage> {
                                       ),
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'Masukkan nama';
+                                          return 'Masukkan Nama';
                                         } else if (value == spasi) {
                                           return null;
                                         } else {
@@ -232,7 +232,7 @@ class _RegisPageState extends State<RegisPage> {
                                         var passNonNullValue =
                                             PassCurrentValue ?? "";
                                         if (passNonNullValue.isEmpty) {
-                                          return ('Masukkan Passoword');
+                                          return ('Masukkan Password');
                                         } else if (passNonNullValue.length <
                                             7) {
                                           return ('Password harus mempunyai 8 karakter');

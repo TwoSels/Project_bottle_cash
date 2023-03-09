@@ -212,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                                       var passNonNullValue =
                                           PassCurrentValue ?? "";
                                       if (passNonNullValue.isEmpty) {
-                                        return ('Masukkan Passoword');
+                                        return ('Masukkan Password');
                                       } else if (passNonNullValue.length < 7) {
                                         return ('Password harus mempunyai 8 karakter');
                                       } else if (!regex
@@ -257,7 +257,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ))),
                                   child: RichText(
                                       text: TextSpan(
-                                          text: "Lupa Passowrd",
+                                          text: "Lupa Password",
                                           style: GoogleFonts.roboto(
                                             color: Colors.red,
                                             fontSize: 14,

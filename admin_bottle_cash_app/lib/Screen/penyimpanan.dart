@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -9,6 +10,13 @@ class penyimpanan extends StatefulWidget {
 }
 
 class _penyimpananState extends State<penyimpanan> {
+  DatabaseReference penyimpananbotol =
+      FirebaseDatabase.instance.ref('penyimpanan/botol');
+  DatabaseReference penyimpanantutp =
+      FirebaseDatabase.instance.ref('penyimpanan/tutup');
+
+  var jmlhbotol;
+  var jmlhtutup;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

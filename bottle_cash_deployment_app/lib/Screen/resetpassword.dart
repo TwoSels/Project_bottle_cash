@@ -19,6 +19,7 @@ class _resetpasswordState extends State<resetpassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          backgroundColor: Color(0xFF8DC13F),
           automaticallyImplyLeading: false,
           title: Text('Reset Password'),
           leading: GestureDetector(
@@ -93,7 +94,7 @@ class _resetpasswordState extends State<resetpassword> {
                                     .sendPasswordResetEmail(
                                         email: _emailController.text);
                                 Fluttertoast.showToast(
-                                    msg: "Silahkan Cek Email");
+                                    msg: "Silahkan Lihat Email");
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -101,7 +102,7 @@ class _resetpasswordState extends State<resetpassword> {
                               } on FirebaseAuthException catch (e) {
                                 if (e.code == 'user-not-found') {
                                   Fluttertoast.showToast(
-                                      msg: 'Email Tidak Ada');
+                                      msg: 'Email Tidak Terdaftar');
                                 }
                               }
                             }
